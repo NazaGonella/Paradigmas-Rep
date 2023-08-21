@@ -21,4 +21,4 @@ linksL cityA cityB (Lin city1 city2 _) | cityA == city1 && cityB == city2 = True
                                      | cityB == city1 && cityA == city2 = True
                                      | otherwise = False
 capacityL (Lin _ _ quality) = capacityQ quality
-delayL (Lin city1 city2 quality) = (distanceC city1 city2) / (delayQ quality)
+delayL (Lin city1 city2 quality) = (distanceC city1 city2) * (delayQ quality)
