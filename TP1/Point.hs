@@ -1,7 +1,9 @@
 module Point ( Point, newP, difP)
    where
 
-data Point = Poi Int Int deriving (Eq, Show)
+data Point = Poi Int Int deriving (Eq)
+instance Show Point where
+   show (Poi x y) = "(" ++ show x ++", " ++ show y ++ ")"
 
 newP :: Int -> Int -> Point
 difP :: Point -> Point -> Float  -- distancia absoluta

@@ -3,7 +3,9 @@ module City ( City, newC, nameC, distanceC )
 
 import Point
 
-data City = Cit String Point deriving (Eq, Show)
+data City = Cit String Point deriving (Eq)
+instance Show City where
+   show (Cit nombre pos) = " " ++ nombre ++ " " ++ show pos ++ " "
 
 newC :: String -> Point -> City
 nameC :: City -> String

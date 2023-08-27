@@ -1,3 +1,4 @@
+
 module Region ( Region, newR, foundR, linkR, tunelR, connectedR, linkedR, delayR, availableCapacityForR)
     where
 
@@ -7,13 +8,18 @@ import Quality
 import Link
 import Tunel
 
+import Data.List
+
 data Region = Reg [City] [Link] [Tunel]
 instance Show Region where
     show (Reg cities links tunnels) =
-        "Region:\n" ++
-        "Cities: " ++ show cities ++ "\n" ++
-        "Links: " ++ show links ++ "\n" ++
-        "Tunnels: " ++ show tunnels
+        "\n        +--------+" ++
+        "\n=======   REGION   =============================================================================================================================================\n" ++
+        "        +--------+" ++
+        "\n\nCities:  " ++ intercalate " | " (map show cities) ++ "\n" ++
+        "\nLinks:    " ++ intercalate "  |  " (map show links) ++ "\n" ++
+        "\nTunnels: " ++ intercalate "  |  " (map show tunnels) ++ "\n" ++
+        "\n=================================================================================================================================================================\n"
 
 -- Funciones Principales (P)
 newR :: Region
@@ -56,6 +62,7 @@ tunelR (Reg cities links tunels) cadenaCitiesPorConectar --P
         | not (estaContenido listadoLinks links) = error "Alguno de los links entre las ciudades no se encuentra en la región."
         | connectedR (Reg cities links tunels) (head cadenaCitiesPorConectar) (last cadenaCitiesPorConectar) = error "El túnel entre ambas ciudades ya existe."
         | availableCapacityForR (Reg cities links tunels) (head cadenaCitiesPorConectar) (last cadenaCitiesPorConectar) <= 0 = error "No hay suficiente capacidad para construir el túnel."
+        | any (<= 0) ((map capacityL) links) = error "Alguno de los links no tiene capacidad suficiente para el túnel."
         | otherwise = Reg cities links (tunels ++ [newT listadoLinks])
     where
         listadoLinks = listadoLinksEntreCiudades cadenaCitiesPorConectar links
@@ -78,9 +85,8 @@ delayR (Reg cities links tunels) city1 city2 --P
         cadenaCities = seccionarCities city1 city2 cities
         listadoLinks = listadoLinksEntreCiudades cadenaCities links
 
-availableCapacityForR (Reg cities links tunels) city1 city2 --P
-    | not (estanLinkeadas cadenaCities links) = error "Las ciudades no están conectadas."
-    | otherwise = capacidadTotal - contarTrues [usesT x y | x <- listadoLinksEntreCiudades cities links, y <- tunels]
+availableCapacityForR (Reg cities links tunels) city1 city2 
+        = capacidadTotal - contarTrues [usesT x y | x <- listadoLinks, y <- tunels]
     where
         cadenaCities = seccionarCities city1 city2 cities
         listadoLinks = listadoLinksEntreCiudades cadenaCities links

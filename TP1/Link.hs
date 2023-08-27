@@ -6,7 +6,9 @@ import City
 import Quality
 import Distribution.FieldGrammar (List)
 
-data Link = Lin City City Quality deriving (Eq, Show)
+data Link = Lin City City Quality deriving (Eq)
+instance Show Link where
+    show (Lin city1 city2 qua) = nameC city1 ++ " <--> " ++ nameC city2
 
 newL :: City -> City -> Quality -> Link -- genera un link entre dos ciudades distintas
 connectsL :: City -> Link -> Bool   -- indica si esta ciudad es parte de este link

@@ -6,7 +6,9 @@ import City
 import Quality
 import Link
 
-data Tunel = Tun [Link] deriving (Eq, Show)
+data Tunel = Tun [Link] deriving (Eq)
+instance Show Tunel where
+    show (Tun links) = "(" ++ show (head links) ++ ") " ++ "<==>" ++ " (" ++ show (last links) ++ ")"
 
 newT :: [Link] -> Tunel
 connectsT :: City -> City -> Tunel -> Bool -- inidca si este tunel conceta estas dos ciudades distintas
