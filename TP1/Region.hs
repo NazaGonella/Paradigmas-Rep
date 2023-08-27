@@ -52,9 +52,10 @@ linkR (Reg cities links tunels) city1 city2 qua1 --P
 
 tunelR (Reg cities links tunels) cadenaCitiesPorConectar --P
         | not (estaContenido cadenaCitiesPorConectar cities) = error "Alguna de las ciudades no se encuentra en la región."
-        | not (estanLinkeadas cadenaCitiesPorConectar links) = error "Alguna de las ciudades no están conectadas."
+        | not (estanLinkeadas cadenaCitiesPorConectar links) = error "Algunas de las ciudades no están conectadas."
         | not (estaContenido listadoLinks links) = error "Alguno de los links entre las ciudades no se encuentra en la región."
         | connectedR (Reg cities links tunels) (head cadenaCitiesPorConectar) (last cadenaCitiesPorConectar) = error "El túnel entre ambas ciudades ya existe."
+        | availableCapacityForR (Reg cities links tunels) (head cadenaCitiesPorConectar) (last cadenaCitiesPorConectar) <= 0 = error "No hay suficiente capacidad para construir el túnel."
         | otherwise = Reg cities links (tunels ++ [newT listadoLinks])
     where
         listadoLinks = listadoLinksEntreCiudades cadenaCitiesPorConectar links
@@ -84,22 +85,3 @@ availableCapacityForR (Reg cities links tunels) city1 city2 --P
         cadenaCities = seccionarCities city1 city2 cities
         listadoLinks = listadoLinksEntreCiudades cadenaCities links
         capacidadTotal = sum (map capacityL listadoLinks)
-
--- city1 = newC "A" (newP 12 54)
--- city2 = newC "B" (newP 43 102)
--- city3 = newC "C" (newP 4 86)
--- city4 = newC "D" (newP 24 25)
--- city5 = newC "E" (newP 24 25)
--- city6 = newC "F" (newP 24 25)
--- city7 = newC "G" (newP 24 25)
--- city8 = newC "H" (newP 24 25)
-
--- qua1 = newQ "adda" 4 2.5
--- link1 = newL city1 city2 qua1
--- link2 = newL city2 city3 qua1
--- link3 = newL city3 city4 qua1
--- link4 = newL city4 city5 qua1
--- link5 = newL city5 city6 qua1
--- tunel1 = newT [link1, link2, link3]
--- region1 = Reg [city1, city2] [link1, link2] [tunel1]
--- region2 = Reg [city1, city2, city3, city4, city5, city6] [link1, link2, link3, link4, link5] [tunel1]
