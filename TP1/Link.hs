@@ -4,7 +4,6 @@ module Link ( Link, newL, linksL, connectsL, capacityL, delayL)
 import Point
 import City
 import Quality
-import Distribution.FieldGrammar (List)
 
 data Link = Lin City City Quality deriving (Eq)
 instance Show Link where
