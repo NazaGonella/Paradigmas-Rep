@@ -1,0 +1,105 @@
+module Region ( Region, newR, foundR, linkR, tunelR, connectedR, linkedR, delayR, availableCapacityForR)
+    where
+
+import Point
+import City
+import Quality
+import Link
+import Tunel
+
+data Region = Reg [City] [Link] [Tunel]
+instance Show Region where
+    show (Reg cities links tunnels) =
+        "Region:\n" ++
+        "Cities: " ++ show cities ++ "\n" ++
+        "Links: " ++ show links ++ "\n" ++
+        "Tunnels: " ++ show tunnels
+
+-- Funciones Principales (P)
+newR :: Region
+foundR :: Region -> City -> Region -- agrega una nueva ciudad a la región
+linkR :: Region -> City -> City -> Quality -> Region -- enlaza dos ciudades de la región con un enlace de la calidad indicada
+tunelR :: Region -> [ City ] -> Region -- genera una comunicación entre dos ciudades distintas de la región
+connectedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan conectadas por un tunel
+linkedR :: Region -> City -> City -> Bool -- indica si estas dos ciudades estan enlazadas
+delayR :: Region -> City -> City -> Float -- dadas dos ciudades conectadas, indica la demora
+availableCapacityForR :: Region -> City -> City -> Int -- indica la capacidad disponible entre dos ciudades
+
+-- Funciones Auxiliares (A)
+estaContenido :: Eq a => [a] -> [a] -> Bool
+estaContenido listaChica listaGrande = all (\x -> elem x listaGrande) listaChica --A
+estanDosCitiesEnCities :: City -> City -> [City] -> Bool
+estanDosCitiesEnCities city1 city2 cities = elem city1 cities && elem city2 cities --A
+seccionarCities :: City -> City -> [City] -> [City]
+seccionarCities inicio fin lista = takeWhile (\c -> c /= fin || c == inicio) (dropWhile (/= inicio) lista) ++ [fin] --A
+estanLinkeadas :: [City] -> [Link] -> Bool
+estanLinkeadas ciudades links = all (== True) [any (== True) (map (linksL x y) links) | (x, y) <- zip ciudades (tail ciudades)] --A
+listadoLinksEntreCiudades :: [City] -> [Link] -> [Link]
+listadoLinksEntreCiudades ciudades links = [link | (cityx, cityy) <- zip ciudades (tail ciudades), link <- links, linksL cityx cityy link] --A
+contarTrues :: [Bool] -> Int
+contarTrues boolList = length [b | b <- boolList, b] --A
+
+newR = Reg [] [] [] --P
+
+foundR (Reg cities links tunels) city --P
+        | elem (nameC city) ((map nameC) cities) = error (nameC city ++ " ya se encuentra en la región.")
+        | otherwise = Reg (cities ++ [city]) links tunels
+
+linkR (Reg cities links tunels) city1 city2 qua1 --P
+        | not (estanDosCitiesEnCities city1 city2 cities) = error "Alguna de las ciudades no se encuentra en la región."
+        | estanLinkeadas [city1, city2] links = error "La conexión entre ambas ciudades ya existe."
+        | otherwise = Reg cities (links ++ [newL city1 city2 qua1]) tunels
+
+tunelR (Reg cities links tunels) cadenaCitiesPorConectar --P
+        | not (estaContenido cadenaCitiesPorConectar cities) = error "Alguna de las ciudades no se encuentra en la región."
+        | not (estanLinkeadas cadenaCitiesPorConectar links) = error "Alguna de las ciudades no están conectadas."
+        | not (estaContenido listadoLinks links) = error "Alguno de los links entre las ciudades no se encuentra en la región."
+        | connectedR (Reg cities links tunels) (head cadenaCitiesPorConectar) (last cadenaCitiesPorConectar) = error "El túnel entre ambas ciudades ya existe."
+        | otherwise = Reg cities links (tunels ++ [newT listadoLinks])
+    where
+        listadoLinks = listadoLinksEntreCiudades cadenaCitiesPorConectar links
+
+connectedR (Reg cities links tunels) city1 city2 --P
+        | not (estanDosCitiesEnCities city1 city2 cities) = False
+        | all (==False) (map (connectsT city1 city2) tunels) = False
+        | otherwise = True
+
+linkedR (Reg cities links tunels) city1 city2 --P
+        | not (estanDosCitiesEnCities city1 city2 cities) = error "Alguna de las ciudades no se encuentra en la región."
+        | otherwise = estanLinkeadas cadenaCities links
+    where
+        cadenaCities = seccionarCities city1 city2 cities
+
+delayR (Reg cities links tunels) city1 city2 --P
+        | not (estanDosCitiesEnCities city1 city2 cities) = error "Alguna de las ciudades no se encuentra en la región."
+        | otherwise = sum (map delayL listadoLinks)
+    where
+        cadenaCities = seccionarCities city1 city2 cities
+        listadoLinks = listadoLinksEntreCiudades cadenaCities links
+
+availableCapacityForR (Reg cities links tunels) city1 city2 --P
+    | not (estanLinkeadas cadenaCities links) = error "Las ciudades no están conectadas."
+    | otherwise = capacidadTotal - contarTrues [usesT x y | x <- listadoLinksEntreCiudades cities links, y <- tunels]
+    where
+        cadenaCities = seccionarCities city1 city2 cities
+        listadoLinks = listadoLinksEntreCiudades cadenaCities links
+        capacidadTotal = sum (map capacityL listadoLinks)
+
+-- city1 = newC "A" (newP 12 54)
+-- city2 = newC "B" (newP 43 102)
+-- city3 = newC "C" (newP 4 86)
+-- city4 = newC "D" (newP 24 25)
+-- city5 = newC "E" (newP 24 25)
+-- city6 = newC "F" (newP 24 25)
+-- city7 = newC "G" (newP 24 25)
+-- city8 = newC "H" (newP 24 25)
+
+-- qua1 = newQ "adda" 4 2.5
+-- link1 = newL city1 city2 qua1
+-- link2 = newL city2 city3 qua1
+-- link3 = newL city3 city4 qua1
+-- link4 = newL city4 city5 qua1
+-- link5 = newL city5 city6 qua1
+-- tunel1 = newT [link1, link2, link3]
+-- region1 = Reg [city1, city2] [link1, link2] [tunel1]
+-- region2 = Reg [city1, city2, city3, city4, city5, city6] [link1, link2, link3, link4, link5] [tunel1]
