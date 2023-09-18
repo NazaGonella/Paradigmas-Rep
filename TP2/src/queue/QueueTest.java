@@ -10,33 +10,37 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class QueueTest {
 
-  @Test public void test01QueueShouldBeEmptyWhenCreated() {
+private static String Something = "Something";
+private static String First = "First";
+private static String Second = "Second";
+
+@Test public void test01QueueShouldBeEmptyWhenCreated() {
     assertTrue(new Queue().isEmpty()  );
   }
 
   @Test public void test02AddElementsToTheQueue() {
-    assertFalse( queueWithSomething("Something").isEmpty() );
+    assertFalse( queueWithSomething(Something).isEmpty() );
   }
 
   @Test public void test03AddedElementsIsAtHead() {
-    assertEquals( "Something", queueWithSomething("Something").head() );
+    assertEquals( Something, queueWithSomething(Something).head() );
   }
 
   @Test public void test04TakeRemovesElementsFromTheQueue() {
-    Queue queue = queueWithSomething("Something");
+    Queue queue = queueWithSomething(Something);
     queue.take();
     assertionEmptyQueue(queue);
   }
 
   @Test
   public void test05TakeReturnsLastAddedObject() {
-  	String addedObject = "Something";
+  	String addedObject = Something;
 	assertEquals(queueWithSomething(addedObject).take(), addedObject);
   }
 
   @Test public void test06QueueBehavesFIFO() {
-	String firstAddedObject = "First";
-	String secondAddedObject = "Second";
+	String firstAddedObject = First;
+	String secondAddedObject = Second;
 	Queue queue = queueWithTwoElements(firstAddedObject, secondAddedObject);
 
     assertEquals( queue.take(), firstAddedObject );
@@ -45,21 +49,21 @@ public class QueueTest {
   }
 
   @Test public void test07HeadReturnsFirstAddedObject() {
-	String firstAddedObject = "First";
-	Queue queue = queueWithTwoElements(firstAddedObject, "Second");
+	String firstAddedObject = First;
+	Queue queue = queueWithTwoElements(firstAddedObject, Second);
 
     assertEquals( queue.head(), firstAddedObject );
   }
 
   @Test public void test08HeadDoesNotRemoveObjectFromQueue() {
-	Queue queue = queueWithSomething("Something");
+	Queue queue = queueWithSomething(Something);
     assertEquals( 1, queue.size() );
     queue.head();
     assertEquals( 1, queue.size() );
   }
 
   @Test public void test09SizeRepresentsObjectInTheQueue() {
-    assertEquals( 2, queueWithTwoElements("First", "Second").size() );
+    assertEquals( 2, queueWithTwoElements(First, Second).size() );
   }
 
   @Test public void test10CanNotTakeWhenThereAreNoObjectsInTheQueue() {
@@ -67,7 +71,7 @@ public class QueueTest {
   }
  
   @Test public void test09CanNotTakeWhenThereAreNoObjectsInTheQueueAndTheQueueHadObjects() {
-	Queue queue = queueWithSomething("Something");
+	Queue queue = queueWithSomething(Something);
     queue.take();
     assertThrowsLike(() -> queue.take());
   }
