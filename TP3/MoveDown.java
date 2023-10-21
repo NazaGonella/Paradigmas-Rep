@@ -3,7 +3,6 @@ package nemo;
 public class MoveDown extends Command {
 
 	public void execute(Nemo nemo) {
-		
 		nemo.moveDown();
 	}
 

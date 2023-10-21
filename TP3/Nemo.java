@@ -5,13 +5,19 @@ import java.util.Arrays;
 
 public class Nemo {
 	
+  public static String Boooooooooom = "BOOOOOOOOOOM";
   private Position position;
   private Cardinal facingDirection;
   private Surface nivelDeSuperficie;
-  private ArrayList<Command> commands = new ArrayList<>(Arrays.asList(new MoveUp(), new MoveDown(), new ReleaseCapsule(), new MoveForward(), new RotateRight(), new RotateLeft()));
+  private ArrayList<Command> commands = new ArrayList<>(Arrays.asList(
+	  new MoveUp(), 
+	  new MoveDown(), 
+	  new ReleaseCapsule(), 
+	  new MoveForward(), 
+	  new RotateRight(), 
+	  new RotateLeft()));
 	
   public Nemo(Position position, Cardinal facingDirection) {
-	
 	this.position = position;
 	this.facingDirection = facingDirection;
 	nivelDeSuperficie = new SurfaceLevelZero();
@@ -28,11 +34,10 @@ public class Nemo {
   }
 	
   public Nemo Command(String commands) {
-	  
 	commands.chars().mapToObj(letra -> (char) letra).forEach(this::ApplyCommand);
 	return this;
-	
   }
+  
   public void ApplyCommand(char singleCommand) {
 	  commands.stream().filter(comando -> comando.applies(singleCommand)).forEach(comando -> comando.execute(this));;
   }
@@ -55,4 +60,5 @@ public class Nemo {
   public void rotateLeft() {
 	facingDirection = facingDirection.rotateLeft();
   }
+  
 }

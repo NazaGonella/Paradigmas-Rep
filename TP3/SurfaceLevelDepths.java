@@ -13,13 +13,11 @@ public class SurfaceLevelDepths extends Surface {
     }
 
 	public Surface moveDown() {
-		// TODO Auto-generated method stub
 		return new SurfaceLevelDepths(this);
 	}
 
 	public Surface releaseCapsule() {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("No se puede lanzar la cápsula");
+		throw new RuntimeException(Nemo.Boooooooooom);
 	}
 	
 	public int getDepthLevel() {
