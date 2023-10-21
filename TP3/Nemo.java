@@ -14,7 +14,7 @@ public class Nemo {
 	
 	this.position = position;
 	this.facingDirection = facingDirection;
-	nivelDeSuperficie = new SurfaceLevel0();
+	nivelDeSuperficie = new SurfaceLevelZero();
   }
 	
   public Position getPosition() {

@@ -7,6 +7,7 @@ public class SurfaceLevelDepths extends Surface {
     public SurfaceLevelDepths(Surface previousSurfaceLevel) {
     	this.previousSurfaceLevel = previousSurfaceLevel;
     }
+    
     public Surface moveUp() {
     	return previousSurfaceLevel;
     }
@@ -20,9 +21,9 @@ public class SurfaceLevelDepths extends Surface {
 		// TODO Auto-generated method stub
 		throw new RuntimeException("No se puede lanzar la cápsula");
 	}
-
-	public int getDepth() {
-		return previousSurfaceLevel.getDepth() + 1;
+	
+	public int getDepthLevel() {
+		return previousSurfaceLevel.getDepthLevel() + 1;
 	}
 
 }

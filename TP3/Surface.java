@@ -5,5 +5,5 @@ public abstract class Surface {
 	public abstract Surface moveUp();
 	public abstract Surface moveDown();
 	public abstract Surface releaseCapsule();
-	public abstract int getDepth();
+	public abstract int getDepthLevel();
 }
