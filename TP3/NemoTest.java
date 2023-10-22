@@ -28,11 +28,11 @@ public class NemoTest {
 	assertEquals(new SurfaceLevelZero(), nemo.Command("u").getSurfaceLevel());
   }
  
-  @Test public void test05MultipleDownCommands() {
+  @Test public void test04MultipleDownCommands() {
 	assertEquals(new SurfaceLevelDepths(new SurfaceLevelOne()), nemoFacingWest().Command("dd").getSurfaceLevel());
   }
   
-  @Test public void test04MultipleUpCommands() {
+  @Test public void test05MultipleUpCommands() {
 	Nemo nemo = nemoFacingWest();
 	nemo.Command("dddddd");
 	assertEquals(new SurfaceLevelOne(), nemo.Command("uuuuu").getSurfaceLevel());
@@ -77,31 +77,31 @@ public class NemoTest {
   @Test public void test15EastTurnsRightSuccesfully() {
 	assertEquals(new South(), nemoFacingEast().Command("r").getDirection());
   }
-  @Test public void test12NorthTurnsLeftSuccesfully() {
+  @Test public void test16NorthTurnsLeftSuccesfully() {
 	assertEquals(new West(), nemoFacingNorth().Command("l").getDirection());
   }
   
-  @Test public void test13SouthTurnsLeftSuccesfully() {
+  @Test public void test17SouthTurnsLeftSuccesfully() {
 	assertEquals(new East(), nemoFacingSouth().Command("l").getDirection());
   }
   
-  @Test public void test14WestTurnsLeftSuccesfully() {
+  @Test public void test18WestTurnsLeftSuccesfully() {
 	assertEquals(new South(), nemoFacingWest().Command("l").getDirection());
   }
   
-  @Test public void test15EastTurnsLeftSuccesfully() {
+  @Test public void test19EastTurnsLeftSuccesfully() {
 	assertEquals(new North(), nemoFacingEast().Command("l").getDirection());
   }
   
-  @Test public void testMultipleRightRotationCommands() {
-	assertEquals(new South(), nemoFacingEast().Command("rrrrr").getDirection());
+  @Test public void test20MultipleRightRotationCommands() {
+	assertEquals(new East(), nemoFacingEast().Command("rrrr").getDirection());
   }
   
-  @Test public void testMultipleLeftRotationCommands() {
+  @Test public void test21MultipleLeftRotationCommands() {
 	assertEquals(new West(), nemoFacingEast().Command("llllll").getDirection());
   }
   
-  @Test public void test16ReleasingCapsuleDoesNotAffectSubmarine() {
+  @Test public void test22ReleasingCapsuleDoesNotAffectSubmarine() {
 	Nemo nemo = nemoFacingWest();
 	nemo.Command("m");
 	assertPosition(nemo, new Position(2,1));
@@ -109,32 +109,32 @@ public class NemoTest {
 	assertEquals(nemo.getSurfaceLevel(), new SurfaceLevelZero());
   }
   
-  @Test public void test17ThrowingCapsuleInSurfaceBelowOneExplodesTheSubmarine() {
+  @Test public void test23ThrowingCapsuleInSurfaceBelowOneExplodesTheSubmarine() {
 	Nemo nemo = nemoFacingWest();
 	nemo.Command("ddd");
 	assertEquals(Nemo.Boooooooooom, assertThrows(RuntimeException.class, () -> nemo.Command("m")).getMessage());
   }
   
-  @Test public void test18GettingInDepthsAndComingBackInCorrectSurface() {
+  @Test public void test24GettingInDepthsAndComingBackInCorrectSurface() {
 	Nemo nemo = nemoFacingWest();
 	nemo.Command("ddddd");
 	nemo.Command("uuuu");
 	assertEquals(new SurfaceLevelOne(), nemo.getSurfaceLevel());
   }
   
-  @Test public void test19GetDepthInDepthsWorksCorrectly() {
+  @Test public void test25GetDepthInDepthsWorksCorrectly() {
 	Nemo nemo = nemoFacingWest();
 	nemo.Command("dudddddu");
 	assertEquals(4, nemo.getSurfaceLevel().getDepthLevel());
   }
   
-  @Test public void test20GetDepthInSurfaceOneWorksCorrectly() {
+  @Test public void test26GetDepthInSurfaceOneWorksCorrectly() {
 	Nemo nemo = nemoFacingWest();
 	nemo.Command("dud");
 	assertEquals(1, nemo.getSurfaceLevel().getDepthLevel());
   }
   
-  @Test public void test21GetDepthInSurfaceZeroWorksCorrectly() {
+  @Test public void test27GetDepthInSurfaceZeroWorksCorrectly() {
 	Nemo nemo = nemoFacingWest();
 	nemo.Command("uuuduu");
 	assertEquals(0, nemo.getSurfaceLevel().getDepthLevel());
