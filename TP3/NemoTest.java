@@ -152,8 +152,8 @@ public class NemoTest {
   private Nemo nemoFacingSouth() {
 	return new Nemo(new Position(2,1), new South()); }
   
-  private void assertPosition(Nemo nemo, Position position) {
-	assertEquals(position.getX(), nemo.getPosition().getX());
-	assertEquals(position.getY(), nemo.getPosition().getY()); }
+  private void assertPosition(Nemo nemo, Position expectedPosition) {
+	assertEquals(expectedPosition.getX(), nemo.getPosition().getX());
+	assertEquals(expectedPosition.getY(), nemo.getPosition().getY()); }
   
 }
