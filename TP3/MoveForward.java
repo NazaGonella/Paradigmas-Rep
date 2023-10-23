@@ -6,7 +6,7 @@ public class MoveForward extends Command {
 		nemo.moveForward();
 	}
 	
-	public boolean applies(char command) {
+	public boolean isCommand(char command) {
 		return'f' == command;
 	}
 

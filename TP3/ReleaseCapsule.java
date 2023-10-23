@@ -6,7 +6,7 @@ public class ReleaseCapsule extends Command {
 		nemo.releaseCapsule();
 	}
 	
-	public boolean applies(char command) {
+	public boolean isCommand(char command) {
 		return 'm' == command;
 	}
 

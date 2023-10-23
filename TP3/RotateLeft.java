@@ -6,7 +6,7 @@ public class RotateLeft extends Command {
 		nemo.rotateLeft();
 	}
 	
-	public boolean applies(char command) {
+	public boolean isCommand(char command) {
 		return 'l' == command;
 	}
 	

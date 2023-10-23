@@ -39,7 +39,7 @@ public class Nemo {
   }
   
   public void ApplyCommand(char singleCommand) {
-	  commands.stream().filter(comando -> comando.applies(singleCommand)).forEach(comando -> comando.execute(this));;
+	  commands.stream().filter(comando -> comando.isCommand(singleCommand)).forEach(comando -> comando.execute(this));;
   }
   
   public void moveUp() {
