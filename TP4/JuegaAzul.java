@@ -6,7 +6,7 @@ public class JuegaAzul extends State {
     }
 
 	public State changeState() {
-		return juego.isFinished() ? new FinishedGame(juego) : new JuegaRojo(juego);
+		return juego.finished() ? new Winner(juego) : new JuegaRojo(juego);
 	}
 
 	public char getToken() {
@@ -19,6 +19,14 @@ public class JuegaAzul extends State {
 
 	public void jugarAzul(int column) {
 		juego.jugar(column);
+	}
+
+	public boolean isGameOver() {
+		return false;
+	}
+
+	public String getTitle() {
+		return "Azul";
 	}
 
 }

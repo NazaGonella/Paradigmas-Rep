@@ -10,28 +10,11 @@ public class GameTest {
 	
 	@Test public void test01() {
 		Linea game = new Linea(10, 10, 'A');
-		assertFalse(game.isFinished());
+		assertFalse(game.finished());
 	}
 	
-	@Test public void test03() {
+	@Test public void test04VerticalWorks() {
 		Linea game = new Linea(10, 10, 'A');
-		game.playRedAt(1);
-		game.playBlueAt(1);
-		game.playRedAt(1);
-		game.playBlueAt(1);
-		assertEquals(4, game.getColumnSizeAt(1));
-		game.playRedAt(1);
-		assertEquals(5, game.getColumnSizeAt(1));
-		game.playBlueAt(1);
-		assertEquals(6, game.getColumnSizeAt(1));
-		game.playRedAt(5);
-		assertEquals(1, game.getColumnSizeAt(5));
-	}
-	
-	@Test public void test04() {
-		Linea game = new Linea(10, 10, 'A');
-		game.playRedAt(3);
-		game.playBlueAt(2);
 		game.playRedAt(3);
 		game.playBlueAt(2);
 		game.playRedAt(3);
@@ -42,7 +25,7 @@ public class GameTest {
 		assertTrue(game.checkVertical('X'));
 	}
 	
-	@Test public void test05() {
+	@Test public void test05HorizontalWorks() {
 		Linea game = new Linea(10, 10, 'A');
 		game.playRedAt(0);
 		game.playBlueAt(0);
@@ -54,7 +37,7 @@ public class GameTest {
 		assertTrue(game.checkHorizontal('X'));
 	}
 	
-	@Test public void test06() {
+	@Test public void test06VictoryFinishesGame() {
 		Linea game = new Linea(10, 10, 'C');
 		game.playRedAt(0);
 		game.playBlueAt(1);
@@ -63,45 +46,23 @@ public class GameTest {
 		game.playRedAt(0);
 		game.playBlueAt(1);
 		game.playRedAt(0);
-		assertTrue(game.isFinished());
+		assertTrue(game.finished());
 	}
 	
-	@Test public void test07() {
-		Linea game = new Linea(10, 10, 'A');
+	@Test public void test07DiagonalWorks() {
+		Linea game = new Linea(10, 10, 'C');
 		game.playRedAt(3);
-		game.playRedAt(3);
-		game.playRedAt(3);
-		game.playRedAt(3);
-		game.playRedAt(3);
-		game.playRedAt(3);
-		game.playRedAt(3);
-		game.playRedAt(3);
-		game.playRedAt(3);
-		game.playRedAt(3);
-		game.playRedAt(2);
-		game.playRedAt(2);
-		game.playRedAt(2);
-		game.playRedAt(2);
-		game.playRedAt(2);
-		game.playRedAt(2);
-		game.playRedAt(2);
-		game.playRedAt(2);
-		game.playRedAt(2);
-		game.playRedAt(1);
-		game.playRedAt(1);
-		game.playRedAt(1);
-		game.playRedAt(1);
-		game.playRedAt(1);
-		game.playRedAt(1);
-		game.playRedAt(1);
-		game.playRedAt(1);
-		game.playRedAt(0);
-		game.playRedAt(0);
-		game.playRedAt(0);
-		game.playRedAt(0);
-		game.playRedAt(0);
-		game.playRedAt(0);
-		game.playRedAt(0);
+		game.playBlueAt(4);
+		game.playRedAt(4);
+		game.playBlueAt(5);
+		game.playRedAt(4);
+		game.playBlueAt(5);
+		game.playRedAt(5);
+		game.playBlueAt(6);
+		game.playRedAt(6);
+		game.playBlueAt(6);
+		game.playRedAt(6);
+		
 		assertTrue(game.checkDiagonal('X'));
 	}
 	
@@ -115,5 +76,18 @@ public class GameTest {
 		    assertEquals(nombre.getMessage(), "Turno inválido");
 		}
 
+	}
+	
+	@Test public void test09WinnerIsWinner() {
+		Linea game = new Linea(10, 10, 'A');
+		game.playRedAt(0);
+		game.playBlueAt(1);
+		game.playRedAt(0);
+		game.playBlueAt(1);
+		game.playRedAt(0);
+		game.playBlueAt(1);
+		game.playRedAt(0);
+		
+		assertEquals("Red", Winner.getWinner());
 	}
 }

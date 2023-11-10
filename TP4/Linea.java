@@ -1,9 +1,6 @@
 package cuatroEnLinea;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Linea {
 	
@@ -14,24 +11,32 @@ public class Linea {
 	
 	private ArrayList<ArrayList> columns = new ArrayList();
 	
+	private WinMode modoDeVictoria;
 	private int base;
 	private int altura;
-	private char estrategia;
+	private char variante;
 	
 	private boolean finished = false;
+	private String winner;
 	
-	public Linea(int base, int altura, char estrategia) {
+	public Linea(int base, int altura, char variante) {
 		this.base = base;
 		this.altura = altura;
-		this.estrategia = estrategia;
+		this.variante = Character.toUpperCase(variante);
+		this.modoDeVictoria = WinMode.getWinMode(this.variante);
+		
+		if (base < 4 || altura < 4) {
+			throw new RuntimeException("Invalid dimensions");
+		}
 		
 		for (int i = 0; i < base; i++) {
 			ArrayList<Character> column = new ArrayList();
 			columns.add(column);
+		
 		}
 	}
 
-	public boolean isFinished() {
+	public boolean finished() {
 		return finished;
 	}
 	
@@ -44,65 +49,48 @@ public class Linea {
 	}
 
 	public String show() {
-//        StringBuilder display = new StringBuilder();
-//        for (int i = altura - 1; i >= 0; i--) {
-//            for (int j = 0; j < base; j++) {
-//                if (j < columns.size()) {
-//                	if (i < columns.get(i).size()) {
-//                		display.append(((State) columns.get(i).get(j)).getToken() + " ");
-//                	} else {display.append("- ");}
-//                } else {display.append("- ");}
-//            }
-//            display.append("\n");
-//        }
-//        return display.toString();
-		return null;
+	    String display = "";
+	    display += ("+---".repeat(base) + "+\n");
+	    for (int fila = altura - 1; fila >= 0; fila--) {
+	        for (int columna = 0; columna < base; columna++) {
+	            if (fila < columns.get(columna).size()) {
+	                display += ("| " + columns.get(columna).get(fila) + " ");
+	            } else {
+	                display += ("|   ");
+	            }
+	        }
+	        display += ("|\n");
+	        display += ("+---".repeat(base) + "+\n");
+	    }
+	    if (finished()) {
+	    	display += ("\nEl ganador es: " + winner);
+	    }
+	    return display;
 	}
 
 	public void playRedAt(int promptAsInt) {
-//		if (columns.get(promptAsInt).size() < altura) {
-//			columns.get(promptAsInt).add(redToken);
-//			System.out.println("adad");
-//		}
-//		else {
-//			throw new RuntimeException("Columna llena");
-//		}
-//		
-//		estadoDeJuego = estadoDeJuego.changeState();
-		estadoDeJuego.jugarRojo(promptAsInt);
-	}
-
-	public boolean checkForVictories() {
-		boolean hayVictoria = false;
-		if (estrategia == 'A' || estrategia == 'B' || estrategia == 'C') {
-			System.out.println("ADAD");
-			hayVictoria = checkVertical(estadoDeJuego .getToken());
-			System.out.println(hayVictoria);
-			if (!hayVictoria && (estrategia == 'B' || estrategia == 'C')) {
-				hayVictoria = checkHorizontal(estadoDeJuego.getToken());
-				if (!hayVictoria && (estrategia == 'C')) {
-					hayVictoria = checkDiagonal(estadoDeJuego.getToken());
-				}
-			}
-		}
-		
-		return hayVictoria;
-		
+		estadoDeJuego.jugarRojo(promptAsInt - 1);
 	}
 
 	public void playBlueAt(int promptAsInt) {
-		estadoDeJuego.jugarAzul(promptAsInt);
+		estadoDeJuego.jugarAzul(promptAsInt - 1);
 	}
 
 	public void jugar(int promptAsInt) {
 		if (columns.get(promptAsInt).size() < altura) {
+			
 			columns.get(promptAsInt).add(estadoDeJuego.getToken());
 			checkForVictories();
+			setWinner();
 			estadoDeJuego = estadoDeJuego.changeState();
 		}
 		else {
 			throw new RuntimeException("Columna llena");
 		}
+	}
+	
+	public boolean checkForVictories() {
+		return modoDeVictoria.isThereVictory(this);
 	}
 	
 	public boolean checkVertical(char player) {
@@ -150,32 +138,63 @@ public class Linea {
 	}
 	
 	public boolean checkDiagonal(char player) {
-		int count = 0;
-		int incremento = 0;
-		for (int i = 0; i < altura; i++) {
-			for (int j = 4 - base; j < base + 4; j++) {
-				if (j >= 0 && j < base) {
-					if (i + incremento < columns.get(j).size()) {
-						if ((char) columns.get(j).get(i + incremento) == player) {
-							count+=1;
-							if (count == 4) {
-								finished = true;
-			                	return true;
-							}
-						}else {count = 0;}
-					}else {count = 0;}
-				}else {count = 0;}
-				incremento++;
-			}
-			incremento = 0;
-		}
-		return false;
+	    for (int i = -altura; i < base; i++) {
+	        int count = 0;
+	        for (int j = 0; j < altura; j++) {
+	            int columnIndex = i + j;
+	            if (columnIndex >= 0 && columnIndex < base) {
+	                if (j < columns.get(columnIndex).size()) {
+	                    if ((char) columns.get(columnIndex).get(j) == player) {
+	                        count++;
+	                    } else {
+	                        count = 0;
+	                    }
+	                    if (count == 4) {
+	                        System.out.println("win");
+	                        finished = true;
+	                        return true;
+	                    }
+	                }
+	            }
+	        }
+	    }
+
+	    for (int i = altura + base; i > 0; i--) {
+	        int count = 0;
+	        for (int j = 0; j < altura; j++) {
+	            int columnIndex = i - j;
+	            if (columnIndex >= 0 && columnIndex < base) {
+	                if (j < columns.get(columnIndex).size()) {
+	                    if ((char) columns.get(columnIndex).get(j) == player) {
+	                        count++;
+	                    } else {
+	                        count = 0;
+	                    }
+	                    if (count == 4) {
+	                        System.out.println("win");
+	                        finished = true;
+	                        return true;
+	                    }
+	                }
+	            }
+	        }
+	    }
+
+	    return false;
 	}
 	
-//	public char getTokenAt(int i, int j) {
-//		return (char) columns.get(i).get(j);
-//	}
+	public boolean checkDraw() {
+        return columns.stream().allMatch(column -> column.size() >= altura);
+    }
 	
+	private void setWinner() {
+		//winner = estadoDeJuego.getToken();
+		winner = Winner.getWinner();
+	}
+	
+	public State getEstadoDeJuego() {
+		return estadoDeJuego;
+	}
 }
 
 //+---+---+---+---+---+
