@@ -1,13 +1,15 @@
 package cuatroEnLinea;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 public class Linea {
 	
-	private State estadoDeJuego = new JuegaRojo(this);
+	private State turno = new JuegaRojo();
+	private State stateOfGame;
 	
-	private char redToken = estadoDeJuego.getToken();
-	private char blueToken = estadoDeJuego.getToken();
+	private char redToken = turno.getToken();
+	private char blueToken = turno.getToken();
 	
 	private ArrayList<ArrayList> columns = new ArrayList();
 	
@@ -17,7 +19,6 @@ public class Linea {
 	private char variante;
 	
 	private boolean finished = false;
-	private String winner;
 	
 	public Linea(int base, int altura, char variante) {
 		this.base = base;
@@ -29,23 +30,17 @@ public class Linea {
 			throw new RuntimeException("Invalid dimensions");
 		}
 		
-		for (int i = 0; i < base; i++) {
-			ArrayList<Character> column = new ArrayList();
-			columns.add(column);
+//		for (int i = 0; i < base; i++) {
+//			ArrayList<Character> column = new ArrayList();
+//			columns.add(column);
+//		}
 		
-		}
+        IntStream.range(0, base)
+        	.forEach(i -> columns.add(new ArrayList<>()));
 	}
 
 	public boolean finished() {
 		return finished;
-	}
-	
-	public int getColumnSize() {
-		return columns.size();
-	}
-	
-	public int getColumnSizeAt(int i) {
-		return columns.get(i).size();
 	}
 
 	public String show() {
@@ -63,32 +58,30 @@ public class Linea {
 	        display += ("+---".repeat(base) + "+\n");
 	    }
 	    if (finished()) {
-	    	display += ("\nEl ganador es: " + winner);
+	    	display += (stateOfGame.getTitle());
 	    }
 	    return display;
 	}
 
 	public void playRedAt(int promptAsInt) {
-		estadoDeJuego.jugarRojo(promptAsInt - 1);
+		turno.jugarRojo(this, promptAsInt - 1);
 	}
 
 	public void playBlueAt(int promptAsInt) {
-		estadoDeJuego.jugarAzul(promptAsInt - 1);
+		turno.jugarAzul(this, promptAsInt - 1);
 	}
 
 	public void jugar(int promptAsInt) {
 		if (columns.get(promptAsInt).size() < altura) {
-			
-			columns.get(promptAsInt).add(estadoDeJuego.getToken());
-			checkForVictories();
-			setWinner();
-			estadoDeJuego = estadoDeJuego.changeState();
+			columns.get(promptAsInt).add(turno.getToken());
+			checkGameOver();
+			turno = turno.changeTurno();
 		}
 		else {
 			throw new RuntimeException("Columna llena");
 		}
 	}
-	
+
 	public boolean checkForVictories() {
 		return modoDeVictoria.isThereVictory(this);
 	}
@@ -100,7 +93,6 @@ public class Linea {
 	            if ((char) columns.get(i).get(j) == player) {
 	                count+=1;
 	                if (count == 4) {
-	                	finished = true;
 	                	return true;
 	                }
 	            }
@@ -110,6 +102,7 @@ public class Linea {
 	        }
 	    }
 	    return false;
+	    
 	}
 	
 	public boolean checkHorizontal(char player) {
@@ -120,7 +113,6 @@ public class Linea {
 					if ((char) columns.get(j).get(i) == player) {
 						count+=1;
 						if (count == 4) {
-							finished = true;
 		                	return true;
 						}
 					}
@@ -150,8 +142,6 @@ public class Linea {
 	                        count = 0;
 	                    }
 	                    if (count == 4) {
-	                        System.out.println("win");
-	                        finished = true;
 	                        return true;
 	                    }
 	                }
@@ -171,7 +161,6 @@ public class Linea {
 	                        count = 0;
 	                    }
 	                    if (count == 4) {
-	                        System.out.println("win");
 	                        finished = true;
 	                        return true;
 	                    }
@@ -187,13 +176,23 @@ public class Linea {
         return columns.stream().allMatch(column -> column.size() >= altura);
     }
 	
-	private void setWinner() {
-		//winner = estadoDeJuego.getToken();
-		winner = Winner.getWinner();
+	public State getTurno() {
+		return turno;
 	}
 	
-	public State getEstadoDeJuego() {
-		return estadoDeJuego;
+	public State getStateOfGame() {
+		return stateOfGame;
+	}
+	
+	public void checkGameOver() {
+		if (!finished) {
+			finished = checkForVictories();
+			stateOfGame = new Winner(turno.getTitle());
+		}
+		if (!finished) {
+			finished = checkDraw();
+			stateOfGame = new Empate();
+		}
 	}
 }
 

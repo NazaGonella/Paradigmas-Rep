@@ -2,11 +2,7 @@ package cuatroEnLinea;
 
 public class Empate extends State{
 
-	public Empate(Linea juego) {
-		super(juego);
-	}
-
-	public State changeState() {
+	public State changeTurno() {
 		throw new RuntimeException("Game is over");
 	}
 
@@ -14,16 +10,12 @@ public class Empate extends State{
 		return 0;
 	}
 
-	public void jugarRojo(int column) {
+	public void jugarRojo(Linea juego, int column) {
 		throw new RuntimeException("Game is over");
 	}
 
-	public void jugarAzul(int column) {
+	public void jugarAzul(Linea juego, int column) {
 		throw new RuntimeException("Game is over");
-	}
-	
-	public boolean isGameOver() {
-		return true;
 	}
 
 	public String getTitle() {

@@ -1,33 +1,25 @@
 package cuatroEnLinea;
 
 public class JuegaRojo extends State{
-	
-    public JuegaRojo(Linea juego) {
-        super(juego);
-    }
     
-	public State changeState() {
-		return juego.finished() ? new Winner(juego) : new JuegaAzul(juego);
+	public State changeTurno() {
+		return new JuegaAzul();
 	}
 
 	public char getToken() {
 		return 'X';
 	}
 
-	public void jugarRojo(int column) {
+	public void jugarRojo(Linea juego, int column) {
 		juego.jugar(column);
 	}
 
-	public void jugarAzul(int column) {
+	public void jugarAzul(Linea juego, int column) {
 		throw new RuntimeException("Turno inválido");
-	}
-	
-	public boolean isGameOver() {
-		return false;
 	}
 
 	public String getTitle() {
-		return "Rojo";
+		return "rojo";
 	}
 	
 }

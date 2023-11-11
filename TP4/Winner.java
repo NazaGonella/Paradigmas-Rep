@@ -2,15 +2,13 @@ package cuatroEnLinea;
 
 public class Winner extends State{
 	
-	static private String winner;
+	private String winner;
 	
-	public Winner(Linea juego) {
-		super(juego);
-		
-		winner = juego.getEstadoDeJuego().getTitle();
+	public Winner(String winner) {
+		this.winner = winner;
 	}
 
-	public State changeState() {
+	public State changeTurno() {
 		throw new RuntimeException("Game is over");
 	}
 
@@ -18,23 +16,17 @@ public class Winner extends State{
 		return 0;
 	}
 
-	public void jugarRojo(int column) {
+	public void jugarRojo(Linea juego, int column) {
 		throw new RuntimeException("Game is over");
 	}
 
-	public void jugarAzul(int column) {
+	public void jugarAzul(Linea juego, int column) {
 		throw new RuntimeException("Game is over");
-	}
-	
-	public boolean isGameOver() {
-		return true;
 	}
 
 	public String getTitle() {
-		return "winner";
+		return "El ganador es " + winner;
 	}
 	
-	static public String getWinner() {
-		return winner;
-	}
+	
 }

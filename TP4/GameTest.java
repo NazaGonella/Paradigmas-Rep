@@ -27,25 +27,25 @@ public class GameTest {
 	
 	@Test public void test05HorizontalWorks() {
 		Linea game = new Linea(10, 10, 'A');
-		game.playRedAt(0);
-		game.playBlueAt(0);
 		game.playRedAt(1);
-		game.playBlueAt(0);
+		game.playBlueAt(1);
 		game.playRedAt(2);
-		game.playBlueAt(0);
+		game.playBlueAt(1);
 		game.playRedAt(3);
+		game.playBlueAt(1);
+		game.playRedAt(4);
 		assertTrue(game.checkHorizontal('X'));
 	}
 	
 	@Test public void test06VictoryFinishesGame() {
 		Linea game = new Linea(10, 10, 'C');
-		game.playRedAt(0);
-		game.playBlueAt(1);
-		game.playRedAt(0);
-		game.playBlueAt(1);
-		game.playRedAt(0);
-		game.playBlueAt(1);
-		game.playRedAt(0);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
 		assertTrue(game.finished());
 	}
 	
@@ -80,14 +80,69 @@ public class GameTest {
 	
 	@Test public void test09WinnerIsWinner() {
 		Linea game = new Linea(10, 10, 'A');
-		game.playRedAt(0);
-		game.playBlueAt(1);
-		game.playRedAt(0);
-		game.playBlueAt(1);
-		game.playRedAt(0);
-		game.playBlueAt(1);
-		game.playRedAt(0);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
 		
-		assertEquals("Red", Winner.getWinner());
+		assertEquals("El ganador es rojo", game.getStateOfGame().getTitle());
+	}
+	@Test public void test10FailsIfMatchFinishedAndTryToPlay() {
+		Linea game = new Linea(10, 10, 'A');
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+		try {
+			game.playBlueAt(3);
+		} catch (RuntimeException nombre) {
+		    assertEquals(nombre.getMessage(), "Game is over");
+		}
+		
+		
+		
+	}
+	
+	@Test public void test11() {
+		Linea game = new Linea(10, 10, 'A');
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+		
+		assertEquals("El ganador es rojo", game.getStateOfGame().getTitle());
+		assertTrue(game.finished());
+	}
+	@Test public void test12() {
+		Linea game = new Linea(4, 4, 'A');
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(3);
+		game.playBlueAt(4);
+		game.playRedAt(2);
+		game.playBlueAt(3);
+		game.playRedAt(4);
+		game.playBlueAt(1);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(3);
+		game.playBlueAt(4);
+		game.playRedAt(2);
+		game.playBlueAt(3);
+		game.playRedAt(4);
+		game.playBlueAt(1);
+		
+		
+		assertEquals("It's a tie", game.getStateOfGame().getTitle());
+		
 	}
 }

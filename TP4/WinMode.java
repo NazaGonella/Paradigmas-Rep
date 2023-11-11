@@ -19,5 +19,5 @@ public abstract class WinMode {
 
 	protected abstract char getMode();
 
-	protected abstract boolean isThereVictory(Linea game);
+	public abstract boolean isThereVictory(Linea game);
 }

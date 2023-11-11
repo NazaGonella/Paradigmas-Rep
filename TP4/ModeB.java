@@ -6,8 +6,8 @@ public class ModeB extends WinMode{
 		return 'B';
 	}
 	
-	protected boolean isThereVictory(Linea game) {
-		char player = game.getEstadoDeJuego().getToken();
+	public boolean isThereVictory(Linea game) {
+		char player = game.getTurno().getToken();
 		return (game.checkDiagonal(player));
 	}
 }
