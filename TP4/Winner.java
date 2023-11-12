@@ -8,25 +8,24 @@ public class Winner extends State{
 		this.winner = winner;
 	}
 
-	public State changeTurno() {
-		throw new RuntimeException("Game is over");
-	}
-
 	public char getToken() {
 		return 0;
 	}
 
-	public void jugarRojo(Linea juego, int column) {
-		throw new RuntimeException("Game is over");
+	public State jugarRojo(Linea juego, int column) {
+		throw new RuntimeException(GameIsOver);
 	}
 
-	public void jugarAzul(Linea juego, int column) {
-		throw new RuntimeException("Game is over");
+	public State jugarAzul(Linea juego, int column) {
+		throw new RuntimeException(GameIsOver);
 	}
 
 	public String getTitle() {
-		return "El ganador es " + winner;
+		return WinMessage + winner;
 	}
 	
+	public boolean isGameFinished() {
+		return true;
+	}
 	
 }

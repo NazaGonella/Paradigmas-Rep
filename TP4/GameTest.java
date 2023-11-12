@@ -8,12 +8,14 @@ import org.junit.Test;
 
 public class GameTest {
 	
-	@Test public void test01() {
+	
+	
+	@Test public void test01GameStartsFinished() {
 		Linea game = new Linea(10, 10, 'A');
 		assertFalse(game.finished());
 	}
 	
-	@Test public void test04VerticalWorks() {
+	@Test public void test02WinGameByVertical() {
 		Linea game = new Linea(10, 10, 'A');
 		game.playRedAt(3);
 		game.playBlueAt(2);
@@ -22,34 +24,29 @@ public class GameTest {
 		game.playRedAt(3);
 		game.playBlueAt(2);
 		game.playRedAt(3);
-		assertTrue(game.checkVertical('X'));
+		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
 	}
 	
-	@Test public void test05HorizontalWorks() {
+	@Test public void test05WinGameByHorizontal() {
 		Linea game = new Linea(10, 10, 'A');
+		game.playRedAt(10);
+		game.playBlueAt(1);
 		game.playRedAt(1);
-		game.playBlueAt(1);
+		game.playBlueAt(2);
 		game.playRedAt(2);
-		game.playBlueAt(1);
+		game.playBlueAt(3);
 		game.playRedAt(3);
-		game.playBlueAt(1);
-		game.playRedAt(4);
-		assertTrue(game.checkHorizontal('X'));
+		game.playBlueAt(4);
+		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
 	}
 	
 	@Test public void test06VictoryFinishesGame() {
 		Linea game = new Linea(10, 10, 'C');
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
+		verticalSetup(game);
 		assertTrue(game.finished());
 	}
 	
-	@Test public void test07DiagonalWorks() {
+	@Test public void test07DiagonalPositiveSlopeWorks() {
 		Linea game = new Linea(10, 10, 'C');
 		game.playRedAt(3);
 		game.playBlueAt(4);
@@ -63,66 +60,42 @@ public class GameTest {
 		game.playBlueAt(6);
 		game.playRedAt(6);
 		
-		assertTrue(game.checkDiagonal('X'));
+		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
 	}
 	
-	@Test public void test08() {
+	@Test public void test08PlayingWrongTurnThrowsError() {
 		Linea game = new Linea(10, 10, 'A');
 		game.playRedAt(1);
 		
 		try {
 			game.playRedAt(1);
-		} catch (RuntimeException nombre) {
-		    assertEquals(nombre.getMessage(), "Turno inválido");
+		} catch (RuntimeException error) {
+		    assertEquals(error.getMessage(), State.InvalidTurn);
 		}
 
 	}
 	
-	@Test public void test09WinnerIsWinner() {
+	@Test public void test10CantPlayWhenMatchIsOverByWin() {
 		Linea game = new Linea(10, 10, 'A');
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		
-		assertEquals("El ganador es rojo", game.getStateOfGame().getTitle());
-	}
-	@Test public void test10FailsIfMatchFinishedAndTryToPlay() {
-		Linea game = new Linea(10, 10, 'A');
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
+		verticalSetup(game);
 		try {
 			game.playBlueAt(3);
 		} catch (RuntimeException nombre) {
-		    assertEquals(nombre.getMessage(), "Game is over");
+		    assertEquals(nombre.getMessage(), State.GameIsOver);
 		}
+	}
 		
-		
-		
+	@Test public void test11CantPlayWhenMatchIsOverByTie() {
+		Linea game = new Linea(10, 10, 'A');
+		verticalSetup(game);
+		try {
+			game.playBlueAt(3);
+		} catch (RuntimeException nombre) {
+		    assertEquals(nombre.getMessage(), State.GameIsOver);
+		}
 	}
 	
-	@Test public void test11() {
-		Linea game = new Linea(10, 10, 'A');
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		game.playBlueAt(2);
-		game.playRedAt(1);
-		
-		assertEquals("El ganador es rojo", game.getStateOfGame().getTitle());
-		assertTrue(game.finished());
-	}
-	@Test public void test12() {
+	@Test public void test12GameEndsInTieWhenTheBoardIsFull() {
 		Linea game = new Linea(4, 4, 'A');
 		game.playRedAt(1);
 		game.playBlueAt(2);
@@ -142,7 +115,164 @@ public class GameTest {
 		game.playBlueAt(1);
 		
 		
-		assertEquals("It's a tie", game.getStateOfGame().getTitle());
+		assertEquals(State.ItsADraw, game.getStateOfGame().getTitle());
 		
+	}
+	
+	@Test public void test13CantAddTokensWhenColumnIsFull() {
+		Linea game = new Linea(4, 4, 'A');
+		game.playRedAt(1);
+		game.playBlueAt(1);
+		game.playRedAt(1);
+		game.playBlueAt(1);
+		
+		try {
+			game.playRedAt(1);
+		} catch (RuntimeException error) {
+		    assertEquals(error.getMessage(), game.FullColumn);
+		}
+		
+	}
+	@Test public void test14HorizontalInModeA() {
+		Linea game = new Linea(10, 10, 'A');
+		horizontalSetup(game);
+		
+		assertTrue(game.finished());
+	}
+	
+	@Test public void test15VerticalInModeA() {
+		Linea game = new Linea(10, 10, 'A');
+		verticalSetup(game);
+		
+		assertTrue(game.finished());
+	}
+	
+	@Test public void test16DiagonalAscInModeA() {
+		Linea game = new Linea(10, 10, 'A');
+		diagonalAscSetup(game);
+		
+		assertFalse(game.finished());
+	}
+	
+	@Test public void test17DiagonalDesInModeA() {
+		Linea game = new Linea(10, 10, 'A');
+		diagonalDesSetup(game);
+		
+		assertFalse(game.finished());
+	}
+	
+	@Test public void test18HorizontalInModeB() {
+		Linea game = new Linea(10, 10, 'B');
+		horizontalSetup(game);
+		
+		assertFalse(game.finished());
+	}
+	
+	@Test public void test19VerticalInModeB() {
+		Linea game = new Linea(10, 10, 'B');
+		verticalSetup(game);
+		
+		assertFalse(game.finished());
+	}
+	
+	@Test public void test20DiagonalAscInModeB() {
+		Linea game = new Linea(10, 10, 'B');
+		diagonalAscSetup(game);
+		
+		assertTrue(game.finished());
+	}
+	
+	@Test public void test21DiagonalDesInModeB() {
+		Linea game = new Linea(10, 10, 'B');
+		diagonalDesSetup(game);
+		
+		assertTrue(game.finished());
+	}
+	
+	@Test public void test22HorizontalInModeC() {
+		Linea game = new Linea(10, 10, 'C');
+		horizontalSetup(game);
+		
+		assertTrue(game.finished());
+	}
+
+	@Test public void test23VerticalInModeC() {
+		Linea game = new Linea(10, 10, 'C');
+		verticalSetup(game);
+		
+		assertTrue(game.finished());
+	}
+	
+	@Test public void test24DiagonalAscInModeC() {
+		Linea game = new Linea(10, 10, 'C');
+		diagonalAscSetup(game);
+		
+		assertTrue(game.finished());
+	}
+	
+	@Test public void test25DiagonalDesInModeC() {
+		Linea game = new Linea(10, 10, 'C');
+		diagonalDesSetup(game);
+		
+		assertTrue(game.finished());
+	}
+	
+	@Test public void test26DiagonalDesInModeC() {
+		Linea game = new Linea(10, 10, 'C');
+		
+		try {
+			game.playRedAt(11);
+		} catch (RuntimeException error) {
+		    assertEquals(error.getMessage(), "Invalid prompt");
+		}
+	}
+	
+	private void horizontalSetup(Linea game) {
+		game.playRedAt(1);
+		game.playBlueAt(1);
+		game.playRedAt(2);
+		game.playBlueAt(2);
+		game.playRedAt(3);
+		game.playBlueAt(3);
+		game.playRedAt(4);
+	}
+	
+	private void verticalSetup(Linea game) {
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(1);
+	}
+	
+	private void diagonalAscSetup(Linea game) {
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(2);
+		game.playBlueAt(3);
+		game.playRedAt(3);
+		game.playBlueAt(2);
+		game.playRedAt(3);
+		game.playBlueAt(4);
+		game.playRedAt(4);
+		game.playBlueAt(4);
+		game.playRedAt(4);
+	}
+	
+	private void diagonalDesSetup(Linea game) {
+		game.playRedAt(1);
+		game.playBlueAt(1);
+		game.playRedAt(1);
+		game.playBlueAt(1);
+		game.playRedAt(2);
+		game.playBlueAt(2);
+		game.playRedAt(3);
+		game.playBlueAt(2);
+		game.playRedAt(2);
+		game.playBlueAt(3);
+		game.playRedAt(2);
+		game.playBlueAt(4);
 	}
 }

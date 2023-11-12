@@ -1,15 +1,19 @@
 package cuatroEnLinea;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Linea {
 	
-	private State turno = new JuegaRojo();
-	private State stateOfGame;
+	public static final String FullColumn = "Full column";
+	public static final String InvalidPrompt = "Invalid prompt";
+
+	private State stateOfGame = new JuegaRojo();
 	
-	private char redToken = turno.getToken();
-	private char blueToken = turno.getToken();
+	private char redToken = stateOfGame.getToken();
+	private char blueToken = stateOfGame.getToken();
 	
 	private ArrayList<ArrayList> columns = new ArrayList();
 	
@@ -26,17 +30,11 @@ public class Linea {
 		this.variante = Character.toUpperCase(variante);
 		this.modoDeVictoria = WinMode.getWinMode(this.variante);
 		
-		if (base < 4 || altura < 4) {
-			throw new RuntimeException("Invalid dimensions");
-		}
-		
-//		for (int i = 0; i < base; i++) {
-//			ArrayList<Character> column = new ArrayList();
-//			columns.add(column);
-//		}
-		
-        IntStream.range(0, base)
-        	.forEach(i -> columns.add(new ArrayList<>()));
+		IntStream.range(0, base)
+        .forEach(i -> {
+            ArrayList<Character> column = new ArrayList<>();
+            columns.add(column);
+        });
 	}
 
 	public boolean finished() {
@@ -44,42 +42,73 @@ public class Linea {
 	}
 
 	public String show() {
-	    String display = "";
-	    display += ("+---".repeat(base) + "+\n");
-	    for (int fila = altura - 1; fila >= 0; fila--) {
-	        for (int columna = 0; columna < base; columna++) {
-	            if (fila < columns.get(columna).size()) {
-	                display += ("| " + columns.get(columna).get(fila) + " ");
-	            } else {
-	                display += ("|   ");
-	            }
-	        }
-	        display += ("|\n");
-	        display += ("+---".repeat(base) + "+\n");
-	    }
-	    if (finished()) {
+//		String display = "+---".repeat(base) + "+\n" +
+//		        IntStream.range(0, altura)
+//		                .mapToObj(fila ->
+//		                        IntStream.range(0, base)
+//		                                .mapToObj(columna ->
+//		                                        insideBoard(columna, fila)
+//		                                                ? "| " + columns.get(columna).get(fila) + " "
+//		                                                : "|   "
+//		                                )
+//		                                .collect(Collectors.joining(""))
+//		                                + "|\n" +
+//		                                "+---".repeat(base) + "+\n"
+//		                )
+//		                .collect(Collectors.collectingAndThen(
+//		                        Collectors.toList(),
+//		                        list -> {
+//		                            Collections.reverse(list);
+//		                            return list.stream().collect(Collectors.joining());
+//		                        }
+//		                ));
+		
+		String display = "+---".repeat(base) + "+\n" +
+		        IntStream.range(0, altura)
+		                .mapToObj(fila ->
+		                        IntStream.range(0, base)
+		                                .mapToObj(columna ->
+		                                        insideBoard(columna, fila)
+		                                                ? "| " + getTokenAt(columna, fila) + " "
+		                                                : "|   "
+		                                )
+		                                .collect(Collectors.joining(""))
+		                                + "|\n" +
+		                                "+---".repeat(base) + "+\n"
+		                )
+		                .collect(Collectors.collectingAndThen(
+		                        Collectors.toList(),
+		                        list -> {
+		                            Collections.reverse(list);
+		                            return list.stream().collect(Collectors.joining());
+		                        }
+		                ));
+		
+		if (finished()) {
 	    	display += (stateOfGame.getTitle());
 	    }
 	    return display;
 	}
 
 	public void playRedAt(int promptAsInt) {
-		turno.jugarRojo(this, promptAsInt - 1);
+		stateOfGame = stateOfGame.jugarRojo(this, promptAsInt - 1);
+		checkGameOver();
 	}
 
 	public void playBlueAt(int promptAsInt) {
-		turno.jugarAzul(this, promptAsInt - 1);
+		stateOfGame = stateOfGame.jugarAzul(this, promptAsInt - 1);
+		checkGameOver();
 	}
 
 	public void jugar(int promptAsInt) {
-		if (columns.get(promptAsInt).size() < altura) {
-			columns.get(promptAsInt).add(turno.getToken());
-			checkGameOver();
-			turno = turno.changeTurno();
+		if ( promptAsInt < 0 || promptAsInt >= 10) {
+			throw new RuntimeException(InvalidPrompt);
 		}
-		else {
-			throw new RuntimeException("Columna llena");
+		if (columns.get(promptAsInt).size() >= altura) {
+			throw new RuntimeException(FullColumn);
 		}
+		System.out.println(promptAsInt);
+		columns.get(promptAsInt).add(stateOfGame.getToken());
 	}
 
 	public boolean checkForVictories() {
@@ -87,89 +116,41 @@ public class Linea {
 	}
 	
 	public boolean checkVertical(char player) {
-	    for (int i = 0; i < columns.size(); i++) {
-	        int count = 0;
-	        for (int j = 0; j < columns.get(i).size(); j++) {
-	            if ((char) columns.get(i).get(j) == player) {
-	                count+=1;
-	                if (count == 4) {
-	                	return true;
-	                }
-	            }
-	            else {
-	                count = 0;
-	            }
-	        }
-	    }
-	    return false;
+		
+//		return IntStream.range(0, columns.size())
+//                .anyMatch(i -> IntStream.range(0, columns.get(i).size() - 3)
+//                        .anyMatch(j -> columns.get(i).subList(j, j + 4).stream()
+//                                .allMatch(ch -> ch.equals(player))));
+		
+		return IntStream.range(0, base)
+                .anyMatch(fila -> IntStream.range(0, altura - 3)
+                        .anyMatch(column -> IntStream.range(0, 4)
+                                .allMatch(i -> getTokenAt(column, fila + i) == player)));
 	    
 	}
 	
 	public boolean checkHorizontal(char player) {
-		int count = 0;
-		for (int i = 0; i < altura; i++) {
-			for (int j = 0; j < base; j++) {
-				if (i < columns.get(j).size()) {
-					if ((char) columns.get(j).get(i) == player) {
-						count+=1;
-						if (count == 4) {
-		                	return true;
-						}
-					}
-					else {
-						count = 0;
-					}
-				}
-				else {
-					count = 0;
-				}
-			}
-		}
-		return false;
+		
+		return IntStream.range(0, altura)
+                .anyMatch(fila -> IntStream.range(0, base - 3)
+                        .anyMatch(column -> IntStream.range(0, 4)
+                                .allMatch(i -> getTokenAt(column + i, fila) == player)));
 		
 	}
 	
 	public boolean checkDiagonal(char player) {
-	    for (int i = -altura; i < base; i++) {
-	        int count = 0;
-	        for (int j = 0; j < altura; j++) {
-	            int columnIndex = i + j;
-	            if (columnIndex >= 0 && columnIndex < base) {
-	                if (j < columns.get(columnIndex).size()) {
-	                    if ((char) columns.get(columnIndex).get(j) == player) {
-	                        count++;
-	                    } else {
-	                        count = 0;
-	                    }
-	                    if (count == 4) {
-	                        return true;
-	                    }
-	                }
-	            }
-	        }
-	    }
+		
+		return IntStream.range(0, altura + base)
+		        .anyMatch(i -> {
+		            String diagonalAscendente = IntStream.range(0, altura)
+		                    .mapToObj(j -> String.valueOf(getTokenAt(i + j,j)))
+		                    .collect(Collectors.joining());
+		            String diagonalDescendente = IntStream.range(0, altura)
+		            		.mapToObj(j -> String.valueOf(getTokenAt(i - j,j)))
+		                    .collect(Collectors.joining());
 
-	    for (int i = altura + base; i > 0; i--) {
-	        int count = 0;
-	        for (int j = 0; j < altura; j++) {
-	            int columnIndex = i - j;
-	            if (columnIndex >= 0 && columnIndex < base) {
-	                if (j < columns.get(columnIndex).size()) {
-	                    if ((char) columns.get(columnIndex).get(j) == player) {
-	                        count++;
-	                    } else {
-	                        count = 0;
-	                    }
-	                    if (count == 4) {
-	                        finished = true;
-	                        return true;
-	                    }
-	                }
-	            }
-	        }
-	    }
-
-	    return false;
+		            return diagonalAscendente.contains(String.valueOf(player).repeat(4)) || diagonalDescendente.contains(String.valueOf(player).repeat(4));
+		        });
 	}
 	
 	public boolean checkDraw() {
@@ -177,7 +158,7 @@ public class Linea {
     }
 	
 	public State getTurno() {
-		return turno;
+		return stateOfGame;
 	}
 	
 	public State getStateOfGame() {
@@ -185,14 +166,18 @@ public class Linea {
 	}
 	
 	public void checkGameOver() {
-		if (!finished) {
-			finished = checkForVictories();
-			stateOfGame = new Winner(turno.getTitle());
+		finished = stateOfGame.isGameFinished();
+	}
+	
+	public boolean insideBoard(int columna, int fila) {
+		return (columna >= 0 && columna < base) && (fila < columns.get(columna).size());
+	}
+	
+	public char getTokenAt(int columna, int fila) {
+		if (insideBoard(columna, fila)) {
+			return (char) columns.get(columna).get(fila);
 		}
-		if (!finished) {
-			finished = checkDraw();
-			stateOfGame = new Empate();
-		}
+		return ' ';
 	}
 }
 
