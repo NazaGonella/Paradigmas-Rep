@@ -1,6 +1,6 @@
 package cuatroEnLinea;
 
-public class Winner extends State{
+public class Winner extends StateOfGame{
 	
 	private String winner;
 	
@@ -12,11 +12,11 @@ public class Winner extends State{
 		return 0;
 	}
 
-	public State jugarRojo(Linea juego, int column) {
+	public StateOfGame jugarRojo(Linea juego, int column) {
 		throw new RuntimeException(GameIsOver);
 	}
 
-	public State jugarAzul(Linea juego, int column) {
+	public StateOfGame jugarAzul(Linea juego, int column) {
 		throw new RuntimeException(GameIsOver);
 	}
 

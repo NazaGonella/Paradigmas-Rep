@@ -1,16 +1,16 @@
 package cuatroEnLinea;
 
-public class JuegaAzul extends State {
+public class JuegaAzul extends StateOfGame {
 
 	public char getToken() {
 		return teamBlueToken;
 	}
 
-	public State jugarRojo(Linea game, int promptAsInt) {
+	public StateOfGame jugarRojo(Linea game, int promptAsInt) {
 		throw new RuntimeException(InvalidTurn);
 	}
 
-	public State jugarAzul(Linea game , int promptAsInt) {
+	public StateOfGame jugarAzul(Linea game , int promptAsInt) {
 		game.jugar(promptAsInt);
 		
 		return game.checkDraw() ? new Empate() : (game.checkForVictories() ? new Winner(getTitle()) : new JuegaRojo());

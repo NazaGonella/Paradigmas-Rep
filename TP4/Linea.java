@@ -10,7 +10,7 @@ public class Linea {
 	public static final String FullColumn = "Full column";
 	public static final String InvalidPrompt = "Invalid prompt";
 
-	private State stateOfGame = new JuegaRojo();
+	private StateOfGame stateOfGame = new JuegaRojo();
 	
 	private ArrayList<ArrayList> columns = new ArrayList();
 	
@@ -122,11 +122,11 @@ public class Linea {
         return this.columns.stream().allMatch(column -> column.size() >= height);
     }
 	
-	public State getTurno() {
+	public StateOfGame getTurno() {
 		return stateOfGame;
 	}
 	
-	public State getStateOfGame() {
+	public StateOfGame getStateOfGame() {
 		return stateOfGame;
 	}
 	

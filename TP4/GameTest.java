@@ -101,13 +101,13 @@ public class GameTest {
 	@Test public void test14PlayingWrongTurnThrowsError() {
 		Linea game = lineaTenByTenInMode('C');
 		game.playRedAt(1);
-		assertThrowsLike(() -> game.playRedAt(1), State.InvalidTurn);
+		assertThrowsLike(() -> game.playRedAt(1), StateOfGame.InvalidTurn);
 	}
 	
 	@Test public void test15GameEndsInTieWhenTheBoardIsFull() {
 		Linea game = lineaFourByFourInMode('A');
 		tieSetupFourFour(game);
-		assertEquals(State.ItsADraw, game.getStateOfGame().getTitle());
+		assertEquals(StateOfGame.ItsADraw, game.getStateOfGame().getTitle());
 		
 	}
 	
@@ -125,13 +125,13 @@ public class GameTest {
 	@Test public void test17CantPlayWhenMatchIsOverByWin() {
 		Linea game = lineaTenByTenInMode('C');
 		finishByVerticalRed(game);
-		assertThrowsLike(() -> game.playBlueAt(3), State.GameIsOver);
+		assertThrowsLike(() -> game.playBlueAt(3), StateOfGame.GameIsOver);
 	}
 		
 	@Test public void test18CantPlayWhenMatchIsOverByTie() {
 		Linea game = lineaFourByFourInMode('A');
 		tieSetupFourFour(game);
-		assertThrowsLike(() -> game.playRedAt(3), State.GameIsOver);
+		assertThrowsLike(() -> game.playRedAt(3), StateOfGame.GameIsOver);
 	}
 	
 	@Test public void test19HorizontalInModeA() {
@@ -225,7 +225,7 @@ public class GameTest {
 	@Test public void test32RedTokenDisplayedCorrectly() {
 		Linea game = lineaFourByFourInMode('C');
 		game.playRedAt(2);
-		char teamRedToken = State.teamRedToken;
+		char teamRedToken = StateOfGame.teamRedToken;
 		assertEquals(game.show(), 
 				  "+---+---+---+---+\n"
 				+ "|   |   |   |   |\n"
@@ -244,8 +244,8 @@ public class GameTest {
 		game.playRedAt(2);
 		game.playBlueAt(2);
 		game.playRedAt(2);
-		char teamRedToken = State.teamRedToken;
-		char teamBlueToken = State.teamBlueToken;
+		char teamRedToken = StateOfGame.teamRedToken;
+		char teamBlueToken = StateOfGame.teamBlueToken;
 		assertEquals(game.show(), 
 				  "+---+---+---+---+\n"
 				+ "|   |   |   |   |\n"
@@ -264,8 +264,8 @@ public class GameTest {
 		game.playRedAt(2);
 		game.playBlueAt(3);
 		game.playRedAt(4);
-		char teamRedToken = State.teamRedToken;
-		char teamBlueToken = State.teamBlueToken;
+		char teamRedToken = StateOfGame.teamRedToken;
+		char teamBlueToken = StateOfGame.teamBlueToken;
 		assertEquals(game.show(), "+---+---+---+---+\n"
 				+ "|   |   |   |   |\n"
 				+ "+---+---+---+---+\n"
@@ -430,10 +430,10 @@ public class GameTest {
 	}
 	
 	private void assertWinForTeamRed(Linea game) {
-		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
+		assertEquals((StateOfGame.WinMessage + StateOfGame.teamRedName), game.getStateOfGame().getTitle());
 	}
 	
 	private void assertWinForTeamBlue(Linea game) {
-		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
+		assertEquals((StateOfGame.WinMessage + StateOfGame.teamBlueName), game.getStateOfGame().getTitle());
 	}
 }

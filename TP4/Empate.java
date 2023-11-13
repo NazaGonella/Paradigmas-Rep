@@ -1,16 +1,16 @@
 package cuatroEnLinea;
 
-public class Empate extends State{
+public class Empate extends StateOfGame{
 
 	public char getToken() {
 		return 0;
 	}
 
-	public State jugarRojo(Linea juego, int column) {
+	public StateOfGame jugarRojo(Linea juego, int column) {
 		throw new RuntimeException(GameIsOver);
 	}
 
-	public State jugarAzul(Linea juego, int column) {
+	public StateOfGame jugarAzul(Linea juego, int column) {
 		throw new RuntimeException(GameIsOver);
 	}
 	
