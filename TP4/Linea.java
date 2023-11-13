@@ -12,28 +12,23 @@ public class Linea {
 
 	private State stateOfGame = new JuegaRojo();
 	
-	private char redToken = stateOfGame.getToken();
-	private char blueToken = stateOfGame.getToken();
-	
 	private ArrayList<ArrayList> columns = new ArrayList();
 	
 	private WinMode modoDeVictoria;
 	private int base;
-	private int altura;
-	private char variante;
+	private int height;
 	
 	private boolean finished = false;
 	
 	public Linea(int base, int altura, char variante) {
 		this.base = base;
-		this.altura = altura;
-		this.variante = Character.toUpperCase(variante);
-		this.modoDeVictoria = WinMode.getWinMode(this.variante);
+		this.height = altura;
+		this.modoDeVictoria = WinMode.getWinMode(Character.toUpperCase(variante));
 		
 		IntStream.range(0, base)
         .forEach(i -> {
             ArrayList<Character> column = new ArrayList<>();
-            columns.add(column);
+            this.columns.add(column);
         });
 	}
 
@@ -42,29 +37,8 @@ public class Linea {
 	}
 
 	public String show() {
-//		String display = "+---".repeat(base) + "+\n" +
-//		        IntStream.range(0, altura)
-//		                .mapToObj(fila ->
-//		                        IntStream.range(0, base)
-//		                                .mapToObj(columna ->
-//		                                        insideBoard(columna, fila)
-//		                                                ? "| " + columns.get(columna).get(fila) + " "
-//		                                                : "|   "
-//		                                )
-//		                                .collect(Collectors.joining(""))
-//		                                + "|\n" +
-//		                                "+---".repeat(base) + "+\n"
-//		                )
-//		                .collect(Collectors.collectingAndThen(
-//		                        Collectors.toList(),
-//		                        list -> {
-//		                            Collections.reverse(list);
-//		                            return list.stream().collect(Collectors.joining());
-//		                        }
-//		                ));
-		
 		String display = "+---".repeat(base) + "+\n" +
-		        IntStream.range(0, altura)
+		        IntStream.range(0, height)
 		                .mapToObj(fila ->
 		                        IntStream.range(0, base)
 		                                .mapToObj(columna ->
@@ -104,11 +78,10 @@ public class Linea {
 		if ( promptAsInt < 0 || promptAsInt >= 10) {
 			throw new RuntimeException(InvalidPrompt);
 		}
-		if (columns.get(promptAsInt).size() >= altura) {
+		if (this.columns.get(promptAsInt).size() >= height) {
 			throw new RuntimeException(FullColumn);
 		}
-		System.out.println(promptAsInt);
-		columns.get(promptAsInt).add(stateOfGame.getToken());
+		this.columns.get(promptAsInt).add(stateOfGame.getToken());
 	}
 
 	public boolean checkForVictories() {
@@ -116,22 +89,15 @@ public class Linea {
 	}
 	
 	public boolean checkVertical(char player) {
-		
-//		return IntStream.range(0, columns.size())
-//                .anyMatch(i -> IntStream.range(0, columns.get(i).size() - 3)
-//                        .anyMatch(j -> columns.get(i).subList(j, j + 4).stream()
-//                                .allMatch(ch -> ch.equals(player))));
-		
 		return IntStream.range(0, base)
-                .anyMatch(fila -> IntStream.range(0, altura - 3)
+                .anyMatch(fila -> IntStream.range(0, height - 3)
                         .anyMatch(column -> IntStream.range(0, 4)
                                 .allMatch(i -> getTokenAt(column, fila + i) == player)));
 	    
 	}
 	
 	public boolean checkHorizontal(char player) {
-		
-		return IntStream.range(0, altura)
+		return IntStream.range(0, height)
                 .anyMatch(fila -> IntStream.range(0, base - 3)
                         .anyMatch(column -> IntStream.range(0, 4)
                                 .allMatch(i -> getTokenAt(column + i, fila) == player)));
@@ -139,13 +105,12 @@ public class Linea {
 	}
 	
 	public boolean checkDiagonal(char player) {
-		
-		return IntStream.range(0, altura + base)
+		return IntStream.range(0, height + base)
 		        .anyMatch(i -> {
-		            String diagonalAscendente = IntStream.range(0, altura)
+		            String diagonalAscendente = IntStream.range(0, height)
 		                    .mapToObj(j -> String.valueOf(getTokenAt(i + j,j)))
 		                    .collect(Collectors.joining());
-		            String diagonalDescendente = IntStream.range(0, altura)
+		            String diagonalDescendente = IntStream.range(0, height)
 		            		.mapToObj(j -> String.valueOf(getTokenAt(i - j,j)))
 		                    .collect(Collectors.joining());
 
@@ -154,7 +119,7 @@ public class Linea {
 	}
 	
 	public boolean checkDraw() {
-        return columns.stream().allMatch(column -> column.size() >= altura);
+        return this.columns.stream().allMatch(column -> column.size() >= height);
     }
 	
 	public State getTurno() {
@@ -170,12 +135,12 @@ public class Linea {
 	}
 	
 	public boolean insideBoard(int columna, int fila) {
-		return (columna >= 0 && columna < base) && (fila < columns.get(columna).size());
+		return (columna >= 0 && columna < base) && (fila < this.columns.get(columna).size());
 	}
 	
 	public char getTokenAt(int columna, int fila) {
 		if (insideBoard(columna, fila)) {
-			return (char) columns.get(columna).get(fila);
+			return (char) this.columns.get(columna).get(fila);
 		}
 		return ' ';
 	}

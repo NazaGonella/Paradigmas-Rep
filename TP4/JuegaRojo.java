@@ -6,15 +6,9 @@ public class JuegaRojo extends State{
 		return teamRedToken;
 	}
 
-	public State jugarRojo(Linea juego, int column) {
-		juego.jugar(column);
+	public State jugarRojo(Linea juego, int promptAsInt) {
+		juego.jugar(promptAsInt);
 		
-//		if (juego.checkDraw()) {
-//			return new Empate();
-//		} else if (juego.checkForVictories()) {
-//			return new Winner(getTitle());
-//		}
-//		return new JuegaAzul();
 		return juego.checkDraw() ? new Empate() : (juego.checkForVictories() ? new Winner(getTitle()) : new JuegaAzul());
 
 		

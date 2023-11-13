@@ -6,19 +6,14 @@ public class JuegaAzul extends State {
 		return teamBlueToken;
 	}
 
-	public State jugarRojo(Linea juego, int column) {
+	public State jugarRojo(Linea game, int promptAsInt) {
 		throw new RuntimeException(InvalidTurn);
 	}
 
-	public State jugarAzul(Linea juego , int column) {
-		juego.jugar(column);
+	public State jugarAzul(Linea game , int promptAsInt) {
+		game.jugar(promptAsInt);
 		
-		if (juego.checkDraw()) {
-			return new Empate();
-		} else if (juego.checkForVictories()) {
-			return new Winner(getTitle());
-		}
-		return new JuegaRojo();
+		return game.checkDraw() ? new Empate() : (game.checkForVictories() ? new Winner(getTitle()) : new JuegaRojo());
 	}
 
 	public String getTitle() {
