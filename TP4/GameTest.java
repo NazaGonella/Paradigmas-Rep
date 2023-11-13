@@ -21,49 +21,49 @@ public class GameTest {
 	@Test public void test03RedCanWinHorizontal() {
 		Linea game = lineaTenByTenInMode('C');
 		finishByHorizontalRed(game);
-		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
+		assertWinForTeamRed(game);
 	}
 	
 	@Test public void test04RedCanWinVertical() {
 		Linea game = lineaTenByTenInMode('C');
 		finishByVerticalRed(game);
-		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
+		assertWinForTeamRed(game);
 	}
 	
 	@Test public void test05RedCanWinDiagonalAsc() {
 		Linea game = lineaTenByTenInMode('C');
 		finishByDiagonalAscRed(game);
-		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
+		assertWinForTeamRed(game);
 	}
 	
 	@Test public void test06RedCanWinDiagonalDes() {
 		Linea game = lineaTenByTenInMode('C');
 		finishByDiagonalDesRed(game);
-		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
+		assertWinForTeamRed(game);
 	}
 	
 	@Test public void test07BlueCanWinHorizontal() {
 		Linea game = lineaTenByTenInMode('C');
 		finishByHorizontalBlue(game);
-		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
+		assertWinForTeamBlue(game);
 	}
 	
 	@Test public void test08BlueCanWinVertical() {
 		Linea game = lineaTenByTenInMode('C');
 		finishByVerticalBlue(game);
-		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
+		assertWinForTeamBlue(game);
 	}
 	
 	@Test public void test09BlueCanWinDiagonalAsc() {
 		Linea game = lineaTenByTenInMode('C');
 		finishByDiagonalAscBlue(game);
-		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
+		assertWinForTeamBlue(game);
 	}
 	
 	@Test public void test10BlueCanWinDiagonalDes() {
 		Linea game = lineaTenByTenInMode('C');
 		finishByDiagonalDesBlue(game);
-		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
+		assertWinForTeamBlue(game);
 	}
 	
 	@Test public void test11WinGameDisplaysCorrectMessageForRed() {
@@ -75,7 +75,7 @@ public class GameTest {
 		game.playRedAt(3);
 		game.playBlueAt(2);
 		game.playRedAt(3);
-		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
+		assertWinForTeamRed(game);
 	}
 	
 	@Test public void test12PromptOutOfRangeThrowsException() {
@@ -95,7 +95,7 @@ public class GameTest {
 		game.playBlueAt(2);
 		game.playRedAt(4);
 		game.playBlueAt(2);
-		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
+		assertWinForTeamBlue(game);
 	}
 	
 	@Test public void test14PlayingWrongTurnThrowsError() {
@@ -182,7 +182,7 @@ public class GameTest {
 		assertTrue(finishByDiagonalDesRed(lineaTenByTenInMode('C')));
 	}
 	
-	@Test public void test31BoardDisplayedCorrectly() {
+	@Test public void test31BoardDisplayedCorrectlyA() {
 		assertEquals(lineaFourByFourInMode('C').show(), 
 				  "+---+---+---+---+\n"
 				+ "|   |   |   |   |\n"
@@ -194,6 +194,32 @@ public class GameTest {
 				+ "|   |   |   |   |\n"
 				+ "+---+---+---+---+\n"
 				+ "");
+	}
+	
+	@Test public void test31BoardDisplayedCorrectlyB() {
+		assertEquals(lineaTenByTenInMode('C').show(), 
+				  "+---+---+---+---+---+---+---+---+---+---+\n"
+				  + "|   |   |   |   |   |   |   |   |   |   |\n"
+				  + "+---+---+---+---+---+---+---+---+---+---+\n"
+				  + "|   |   |   |   |   |   |   |   |   |   |\n"
+				  + "+---+---+---+---+---+---+---+---+---+---+\n"
+				  + "|   |   |   |   |   |   |   |   |   |   |\n"
+				  + "+---+---+---+---+---+---+---+---+---+---+\n"
+				  + "|   |   |   |   |   |   |   |   |   |   |\n"
+				  + "+---+---+---+---+---+---+---+---+---+---+\n"
+				  + "|   |   |   |   |   |   |   |   |   |   |\n"
+				  + "+---+---+---+---+---+---+---+---+---+---+\n"
+				  + "|   |   |   |   |   |   |   |   |   |   |\n"
+				  + "+---+---+---+---+---+---+---+---+---+---+\n"
+				  + "|   |   |   |   |   |   |   |   |   |   |\n"
+				  + "+---+---+---+---+---+---+---+---+---+---+\n"
+				  + "|   |   |   |   |   |   |   |   |   |   |\n"
+				  + "+---+---+---+---+---+---+---+---+---+---+\n"
+				  + "|   |   |   |   |   |   |   |   |   |   |\n"
+				  + "+---+---+---+---+---+---+---+---+---+---+\n"
+				  + "|   |   |   |   |   |   |   |   |   |   |\n"
+				  + "+---+---+---+---+---+---+---+---+---+---+\n"
+				  + "");
 	}
 	
 	@Test public void test32RedTokenDisplayedCorrectly() {
@@ -401,5 +427,13 @@ public class GameTest {
 	
 	private Linea lineaFourByFourInMode(char mode) {
 		return new Linea(4, 4, mode);
+	}
+	
+	private void assertWinForTeamRed(Linea game) {
+		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
+	}
+	
+	private void assertWinForTeamBlue(Linea game) {
+		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
 	}
 }
