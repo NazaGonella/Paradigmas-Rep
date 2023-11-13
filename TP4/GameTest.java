@@ -15,10 +15,58 @@ public class GameTest {
 	}
 	
 	@Test public void test02VictoryFinishesGame() {
-		assertTrue(finishByVertical(lineaTenByTenInMode('C')));
+		assertTrue(finishByVerticalRed(lineaTenByTenInMode('C')));
 	}
 	
-	@Test public void test03WinGameDisplaysCorrectMessageForRed() {
+	@Test public void test03RedCanWinHorizontal() {
+		Linea game = lineaTenByTenInMode('C');
+		finishByHorizontalRed(game);
+		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
+	}
+	
+	@Test public void test04RedCanWinVertical() {
+		Linea game = lineaTenByTenInMode('C');
+		finishByVerticalRed(game);
+		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
+	}
+	
+	@Test public void test05RedCanWinDiagonalAsc() {
+		Linea game = lineaTenByTenInMode('C');
+		finishByDiagonalAscRed(game);
+		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
+	}
+	
+	@Test public void test06RedCanWinDiagonalDes() {
+		Linea game = lineaTenByTenInMode('C');
+		finishByDiagonalDesRed(game);
+		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
+	}
+	
+	@Test public void test07BlueCanWinHorizontal() {
+		Linea game = lineaTenByTenInMode('C');
+		finishByHorizontalBlue(game);
+		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
+	}
+	
+	@Test public void test08BlueCanWinVertical() {
+		Linea game = lineaTenByTenInMode('C');
+		finishByVerticalBlue(game);
+		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
+	}
+	
+	@Test public void test09BlueCanWinDiagonalAsc() {
+		Linea game = lineaTenByTenInMode('C');
+		finishByDiagonalAscBlue(game);
+		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
+	}
+	
+	@Test public void test10BlueCanWinDiagonalDes() {
+		Linea game = lineaTenByTenInMode('C');
+		finishByDiagonalDesBlue(game);
+		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
+	}
+	
+	@Test public void test11WinGameDisplaysCorrectMessageForRed() {
 		Linea game = lineaTenByTenInMode('C');
 		game.playRedAt(3);
 		game.playBlueAt(2);
@@ -30,14 +78,14 @@ public class GameTest {
 		assertEquals((State.WinMessage + State.teamRedName), game.getStateOfGame().getTitle());
 	}
 	
-	@Test public void test04PromptOutOfRangeThrowsException() {
+	@Test public void test12PromptOutOfRangeThrowsException() {
 		Linea game = lineaTenByTenInMode('C');
 		
 		assertThrowsLike(() -> game.playRedAt(11), Linea.InvalidPrompt);
 		
 	}	
 	
-	@Test public void test05WinGameDisplaysCorrectMessageForBlue() {
+	@Test public void test13WinGameDisplaysCorrectMessageForBlue() {
 		Linea game = lineaTenByTenInMode('C');
 		game.playRedAt(3);
 		game.playBlueAt(2);
@@ -50,20 +98,20 @@ public class GameTest {
 		assertEquals((State.WinMessage + State.teamBlueName), game.getStateOfGame().getTitle());
 	}
 	
-	@Test public void test06PlayingWrongTurnThrowsError() {
+	@Test public void test14PlayingWrongTurnThrowsError() {
 		Linea game = lineaTenByTenInMode('C');
 		game.playRedAt(1);
 		assertThrowsLike(() -> game.playRedAt(1), State.InvalidTurn);
 	}
 	
-	@Test public void test07GameEndsInTieWhenTheBoardIsFull() {
+	@Test public void test15GameEndsInTieWhenTheBoardIsFull() {
 		Linea game = lineaFourByFourInMode('A');
 		tieSetupFourFour(game);
 		assertEquals(State.ItsADraw, game.getStateOfGame().getTitle());
 		
 	}
 	
-	@Test public void test08CantAddTokensWhenColumnIsFull() {
+	@Test public void test16CantAddTokensWhenColumnIsFull() {
 		Linea game = lineaFourByFourInMode('A');
 		game.playRedAt(1);
 		game.playBlueAt(1);
@@ -74,67 +122,67 @@ public class GameTest {
 		
 	}
 	
-	@Test public void test09CantPlayWhenMatchIsOverByWin() {
+	@Test public void test17CantPlayWhenMatchIsOverByWin() {
 		Linea game = lineaTenByTenInMode('C');
-		finishByVertical(game);
+		finishByVerticalRed(game);
 		assertThrowsLike(() -> game.playBlueAt(3), State.GameIsOver);
 	}
 		
-	@Test public void test10CantPlayWhenMatchIsOverByTie() {
+	@Test public void test18CantPlayWhenMatchIsOverByTie() {
 		Linea game = lineaFourByFourInMode('A');
 		tieSetupFourFour(game);
 		assertThrowsLike(() -> game.playRedAt(3), State.GameIsOver);
 	}
 	
-	@Test public void test11HorizontalInModeA() {
-		assertTrue(finishByHorizontal(lineaTenByTenInMode('A')));
+	@Test public void test19HorizontalInModeA() {
+		assertTrue(finishByHorizontalRed(lineaTenByTenInMode('A')));
 	}
 	
-	@Test public void test12VerticalInModeA() {
-		assertTrue(finishByVertical(lineaTenByTenInMode('A')));
+	@Test public void test20VerticalInModeA() {
+		assertTrue(finishByVerticalRed(lineaTenByTenInMode('A')));
 	}
 	
-	@Test public void test13DiagonalAscInModeA() {
-		assertFalse(finishByDiagonalAsc(lineaTenByTenInMode('A')));
+	@Test public void test21DiagonalAscInModeA() {
+		assertFalse(finishByDiagonalAscRed(lineaTenByTenInMode('A')));
 	}
 	
-	@Test public void test14DiagonalDesInModeA() {
-		assertFalse(finishByDiagonalDes(lineaTenByTenInMode('A')));
+	@Test public void test22DiagonalDesInModeA() {
+		assertFalse(finishByDiagonalDesRed(lineaTenByTenInMode('A')));
 	}
 	
-	@Test public void test15HorizontalInModeB() {
-		assertFalse(finishByHorizontal(lineaTenByTenInMode('B')));
+	@Test public void test23HorizontalInModeB() {
+		assertFalse(finishByHorizontalRed(lineaTenByTenInMode('B')));
 	}
 	
-	@Test public void test16VerticalInModeB() {
-		assertFalse(finishByVertical(lineaTenByTenInMode('B')));
+	@Test public void test24VerticalInModeB() {
+		assertFalse(finishByVerticalRed(lineaTenByTenInMode('B')));
 	}
 	
-	@Test public void test17DiagonalAscInModeB() {
-		assertTrue(finishByDiagonalAsc(lineaTenByTenInMode('B')));
+	@Test public void test25DiagonalAscInModeB() {
+		assertTrue(finishByDiagonalAscRed(lineaTenByTenInMode('B')));
 	}
 	
-	@Test public void test18DiagonalDesInModeB() {
-		assertTrue(finishByDiagonalDes(lineaTenByTenInMode('B')));
+	@Test public void test26DiagonalDesInModeB() {
+		assertTrue(finishByDiagonalDesRed(lineaTenByTenInMode('B')));
 	}
 	
-	@Test public void test19HorizontalInModeC() {
-		assertTrue(finishByHorizontal(lineaTenByTenInMode('C')));
+	@Test public void test27HorizontalInModeC() {
+		assertTrue(finishByHorizontalRed(lineaTenByTenInMode('C')));
 	}
 
-	@Test public void test20VerticalInModeC() {
-		assertTrue(finishByVertical(lineaTenByTenInMode('C')));
+	@Test public void test28VerticalInModeC() {
+		assertTrue(finishByVerticalRed(lineaTenByTenInMode('C')));
 	}
 	
-	@Test public void test21DiagonalAscInModeC() {
-		assertTrue(finishByDiagonalAsc(lineaTenByTenInMode('C')));
+	@Test public void test29DiagonalAscInModeC() {
+		assertTrue(finishByDiagonalAscRed(lineaTenByTenInMode('C')));
 	}
 	
-	@Test public void test22DiagonalDesInModeC() {
-		assertTrue(finishByDiagonalDes(lineaTenByTenInMode('C')));
+	@Test public void test30DiagonalDesInModeC() {
+		assertTrue(finishByDiagonalDesRed(lineaTenByTenInMode('C')));
 	}
 	
-	@Test public void test23BoardDisplayedCorrectly() {
+	@Test public void test31BoardDisplayedCorrectly() {
 		assertEquals(lineaFourByFourInMode('C').show(), 
 				  "+---+---+---+---+\n"
 				+ "|   |   |   |   |\n"
@@ -148,9 +196,10 @@ public class GameTest {
 				+ "");
 	}
 	
-	@Test public void test24RedTokenDisplayedCorrectly() {
+	@Test public void test32RedTokenDisplayedCorrectly() {
 		Linea game = lineaFourByFourInMode('C');
 		game.playRedAt(2);
+		char teamRedToken = State.teamRedToken;
 		assertEquals(game.show(), 
 				  "+---+---+---+---+\n"
 				+ "|   |   |   |   |\n"
@@ -159,34 +208,38 @@ public class GameTest {
 				+ "+---+---+---+---+\n"
 				+ "|   |   |   |   |\n"
 				+ "+---+---+---+---+\n"
-				+ "|   | X |   |   |\n"
+				+ "|   | " + teamRedToken + " |   |   |\n"
 				+ "+---+---+---+---+\n"
 				+ "");
 	}
 	
-	@Test public void test25StackedTokensDisplayedCorrectly() {
+	@Test public void test33StackedTokensDisplayedCorrectly() {
 		Linea game = lineaFourByFourInMode('C');
 		game.playRedAt(2);
 		game.playBlueAt(2);
 		game.playRedAt(2);
+		char teamRedToken = State.teamRedToken;
+		char teamBlueToken = State.teamBlueToken;
 		assertEquals(game.show(), 
 				  "+---+---+---+---+\n"
 				+ "|   |   |   |   |\n"
 				+ "+---+---+---+---+\n"
-				+ "|   | X |   |   |\n"
+				+ "|   | " + teamRedToken + " |   |   |\n"
 				+ "+---+---+---+---+\n"
-				+ "|   | O |   |   |\n"
+				+ "|   | " + teamBlueToken + " |   |   |\n"
 				+ "+---+---+---+---+\n"
-				+ "|   | X |   |   |\n"
+				+ "|   | " + teamRedToken + " |   |   |\n"
 				+ "+---+---+---+---+\n"
 				+ "");
 	}
 	
-	@Test public void test26ConsecutiveTokensDisplayedCorrectly() {
+	@Test public void test34ConsecutiveTokensDisplayedCorrectly() {
 		Linea game = lineaFourByFourInMode('C');
 		game.playRedAt(2);
 		game.playBlueAt(3);
 		game.playRedAt(4);
+		char teamRedToken = State.teamRedToken;
+		char teamBlueToken = State.teamBlueToken;
 		assertEquals(game.show(), "+---+---+---+---+\n"
 				+ "|   |   |   |   |\n"
 				+ "+---+---+---+---+\n"
@@ -194,12 +247,12 @@ public class GameTest {
 				+ "+---+---+---+---+\n"
 				+ "|   |   |   |   |\n"
 				+ "+---+---+---+---+\n"
-				+ "|   | X | O | X |\n"
+				+ "|   | " + teamRedToken + " | " + teamBlueToken + " | " + teamRedToken + " |\n"
 				+ "+---+---+---+---+\n"
 				+ "");
 	}
 
-	private boolean finishByHorizontal(Linea game) {
+	private boolean finishByHorizontalRed(Linea game) {
 		game.playRedAt(1);
 		game.playBlueAt(1);
 		game.playRedAt(2);
@@ -211,7 +264,7 @@ public class GameTest {
 		return game.finished();
 	}
 	
-	private boolean finishByVertical(Linea game) {
+	private boolean finishByVerticalRed(Linea game) {
 		game.playRedAt(1);
 		game.playBlueAt(2);
 		game.playRedAt(1);
@@ -223,7 +276,7 @@ public class GameTest {
 		return game.finished();
 	}
 	
-	private boolean finishByDiagonalAsc(Linea game) {
+	private boolean finishByDiagonalAscRed(Linea game) {
 		game.playRedAt(1);
 		game.playBlueAt(2);
 		game.playRedAt(2);
@@ -239,7 +292,69 @@ public class GameTest {
 		return game.finished();
 	}
 	
-	private boolean finishByDiagonalDes(Linea game) {
+	private boolean finishByDiagonalDesRed(Linea game) {
+		
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(2);
+		game.playBlueAt(2);
+		game.playRedAt(2);
+		game.playBlueAt(3);
+		game.playRedAt(3);
+		game.playBlueAt(4);
+		game.playRedAt(3);
+		game.playBlueAt(2);
+		game.playRedAt(4);
+		game.playBlueAt(4);
+		game.playRedAt(5);
+		
+		return game.finished();
+	}
+	
+	private boolean finishByHorizontalBlue(Linea game) {
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(2);
+		game.playBlueAt(3);
+		game.playRedAt(3);
+		game.playBlueAt(4);
+		game.playRedAt(4);
+		game.playBlueAt(5);
+		
+		return game.finished();
+	}
+	
+	private boolean finishByVerticalBlue(Linea game) {
+		game.playRedAt(1);
+		game.playBlueAt(3);
+		game.playRedAt(2);
+		game.playBlueAt(3);
+		game.playRedAt(2);
+		game.playBlueAt(3);
+		game.playRedAt(2);
+		game.playBlueAt(3);
+		
+		return game.finished();
+	}
+	
+	private boolean finishByDiagonalAscBlue(Linea game) {
+		game.playRedAt(1);
+		game.playBlueAt(2);
+		game.playRedAt(3);
+		game.playBlueAt(3);
+		game.playRedAt(3);
+		game.playBlueAt(4);
+		game.playRedAt(4);
+		game.playBlueAt(4);
+		game.playRedAt(5);
+		game.playBlueAt(5);
+		game.playRedAt(5);
+		game.playBlueAt(5);
+		
+		return game.finished();
+	}
+	
+	private boolean finishByDiagonalDesBlue(Linea game) {
 		game.playRedAt(1);
 		game.playBlueAt(1);
 		game.playRedAt(1);
