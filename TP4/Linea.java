@@ -75,7 +75,7 @@ public class Linea {
 	}
 
 	public void jugar(int promptAsInt) {
-		if ( promptAsInt < 0 || promptAsInt >= 10) {
+		if ( promptAsInt < 0 || promptAsInt >= columns.size()) {
 			throw new RuntimeException(InvalidPrompt);
 		}
 		if (this.columns.get(promptAsInt).size() >= height) {
